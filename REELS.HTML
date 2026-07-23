@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>ORION - Reels</title>
+    <link rel="icon" type="image/x-icon" href="media/MINI LOGO 1.jpg" />
+    <link rel="stylesheet" href="Qwen.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      /* ================= REELS SPECIFIC STYLES ================= */
+      body {
+        background: #000;
+        color: #fff;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .reels-header {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 450px;
+        z-index: 50;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent);
+        border-radius: 0 0 16px 16px;
+      }
+      .reels-header h2 {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin: 0;
+      }
+      .reels-header .camera-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .reels-header .camera-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .reels-feed {
+        width: 100%;
+        max-width: 450px;
+        height: calc(100vh - 70px);
+        margin-top: 0;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+        scrollbar-width: none;
+        position: relative;
+      }
+      .reels-feed::-webkit-scrollbar {
+        display: none;
+      }
+
+      .reel-item {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        scroll-snap-align: start;
+        background: #111;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .reel-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .play-indicator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        font-size: 60px;
+        color: rgba(255, 255, 255, 0.8);
+        pointer-events: none;
+        transition:
+          transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+          opacity 0.2s;
+        opacity: 0;
+        z-index: 20;
+      }
+      .play-indicator.show {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+
+      .double-tap-heart {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        font-size: 80px;
+        color: #ef4444;
+        pointer-events: none;
+        z-index: 30;
+        filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+      }
+      .double-tap-heart.animate {
+        animation: heartPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+          forwards;
+      }
+      @keyframes heartPop {
+        0% {
+          transform: translate(-50%, -50%) scale(0);
+          opacity: 0;
+        }
+        30% {
+          transform: translate(-50%, -50%) scale(1.2);
+          opacity: 1;
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(0.95);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0;
+        }
+      }
+
+      .reel-overlay {
+        position: absolute;
+        bottom: 90px;
+        left: 15px;
+        right: 70px;
+        z-index: 10;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+      }
+      .reel-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 15px;
+        margin-bottom: 8px;
+      }
+      .reel-user img {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        object-fit: cover;
+      }
+      .follow-btn-small {
+        background: transparent;
+        border: 1px solid #fff;
+        color: #fff;
+        padding: 3px 10px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .follow-btn-small:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .follow-btn-small.following {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: transparent;
+      }
+      .reel-caption {
+        font-size: 13px;
+        line-height: 1.4;
+        margin-bottom: 10px;
+      }
+      .reel-music {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .reel-music i {
+        animation: spin 3s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .reel-actions {
+        position: absolute;
+        bottom: 90px;
+        right: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        z-index: 10;
+      }
+      .action-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+      }
+      .action-item i {
+        font-size: 26px;
+        color: #fff;
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        transition: transform 0.2s;
+      }
+      .action-item i:hover {
+        transform: scale(1.1);
+      }
+      .action-item span {
+        font-size: 11px;
+        font-weight: 600;
+        color: #fff;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+      }
+      .action-item.liked i {
+        color: #ef4444;
+      }
+      .action-item.saved i {
+        color: #f5deb3;
+      }
+
+      .reel-avatar-action {
+        position: relative;
+        margin-bottom: 10px;
+      }
+      .reel-avatar-action img {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        object-fit: cover;
+      }
+      .reel-avatar-action .add-icon {
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 18px;
+        height: 18px;
+        background: #8b4513;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
+        border: 2px solid #000;
+      }
+
+      .reel-progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.2);
+        width: 100%;
+        z-index: 40;
+      }
+      .reel-progress-bar {
+        height: 100%;
+        background: #fff;
+        width: 0%;
+        transition: width 0.1s linear;
+      }
+
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 450px;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px 16px 0 0;
+        z-index: 100;
+      }
+      .bottom-nav a {
+        color: rgba(255, 255, 255, 0.6);
+      }
+      .bottom-nav a:hover,
+      .bottom-nav a.active {
+        color: #fff;
+      }
+
+      @media (min-width: 460px) {
+        .reels-feed {
+          border-left: 1px solid rgba(255, 255, 255, 0.1);
+          border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+      }
+
+      /* ================= REELS MODALS & SHEETS ================= */
+      .reel-modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: flex-end;
+        justify-content: center;
+      }
+      .reel-modal-overlay.active {
+        display: flex;
+      }
+
+      .reel-bottom-sheet {
+        width: 100%;
+        max-width: 450px;
+        background: #1c1917;
+        border-radius: 20px 20px 0 0;
+        padding: 20px;
+        transform: translateY(100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        max-height: 70vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .reel-modal-overlay.active .reel-bottom-sheet {
+        transform: translateY(0);
+      }
+
+      .sheet-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .sheet-header h3 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0;
+      }
+      .close-sheet {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .comments-list {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding-right: 5px;
+      }
+      .comment-item {
+        display: flex;
+        gap: 12px;
+      }
+      .comment-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+      .comment-body {
+        flex: 1;
+      }
+      .comment-user {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+      .comment-text {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.4;
+      }
+      .comment-meta {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.4);
+        margin-top: 4px;
+        display: flex;
+        gap: 10px;
+      }
+
+      .comment-input-area {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .comment-input-area input {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        border-radius: 20px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 13px;
+        outline: none;
+      }
+      .post-comment-btn {
+        background: transparent;
+        border: none;
+        color: #f5deb3;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        opacity: 0.5;
+        pointer-events: none;
+        transition: 0.2s;
+      }
+      .post-comment-btn.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .share-sheet {
+        max-height: auto;
+      }
+      .share-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        padding: 10px 0;
+      }
+      .share-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        color: #fff;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .share-item:hover {
+        transform: scale(1.05);
+      }
+      .share-item i {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      }
+      .share-item span {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .reel-options-menu {
+        position: absolute;
+        background: #1c1917;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 6px;
+        min-width: 180px;
+        display: none;
+        flex-direction: column;
+        z-index: 60;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        animation: popIn 0.2s ease;
+      }
+      .reel-options-menu.show {
+        display: flex;
+      }
+      @keyframes popIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .option-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 13px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: left;
+        width: 100%;
+      }
+      .option-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .option-item.danger {
+        color: #ef4444;
+      }
+      .option-item.danger:hover {
+        background: rgba(239, 68, 68, 0.15);
+      }
+      .option-divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+        margin: 4px 0;
+      }
+
+      .reel-toast {
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: rgba(255, 255, 255, 0.9);
+        color: #000;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-size: 13px;
+        font-weight: 600;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s ease;
+        z-index: 300;
+      }
+      .reel-toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ================= SPLASH SCREEN ================= -->
+    <div id="splash-screen">
+      <div class="splash-content">
+        <img
+          src="media/MINI_LOGO no bg.png"
+          alt="Orion Logo"
+          class="splash-logo"
+        />
+        <div class="loading-ring"></div>
+      </div>
+    </div>
+
+    <!-- ================= HEADER ================= -->
+    <div class="reels-header">
+      <h2>Reels</h2>
+      <div class="camera-btn"><i class="fa-solid fa-camera"></i></div>
+    </div>
+
+    <!-- ================= REELS FEED ================= -->
+    <main class="reels-feed" id="reelsFeed">
+      <!-- REEL 1 -->
+      <div class="reel-item" data-video-src="media/reel.mp4">
+        <div class="reel-progress"><div class="reel-progress-bar"></div></div>
+        <video
+          class="reel-video"
+          src="media/reel.mp4"
+          loop
+          muted
+          playsinline
+        ></video>
+        <i class="fa-solid fa-play play-indicator"></i>
+        <i class="fa-solid fa-heart double-tap-heart"></i>
+
+        <div class="reel-overlay">
+          <div class="reel-user">
+            <img src="media/halo.jpg" alt="Sarah" />
+            <span>sarah_chen</span>
+            <button class="follow-btn-small">Follow</button>
+          </div>
+          <div class="reel-caption">
+            Living my best life in Paris 🥐✨ The architecture here is
+            absolutely breathtaking! #travel #paris
+          </div>
+          <div class="reel-music">
+            <i class="fa-solid fa-compact-disc"></i
+            ><span>Original Audio - sarah_chen</span>
+          </div>
+        </div>
+
+        <div class="reel-actions">
+          <div class="reel-avatar-action">
+            <img src="media/halo.jpg" alt="Sarah" />
+            <div class="add-icon"><i class="fa-solid fa-plus"></i></div>
+          </div>
+          <div class="action-item like-action">
+            <i class="fa-regular fa-heart"></i><span>12.4K</span>
+          </div>
+          <div class="action-item comment-action">
+            <i class="fa-regular fa-comment"></i><span>342</span>
+          </div>
+          <div class="action-item share-action">
+            <i class="fa-regular fa-paper-plane"></i><span>Share</span>
+          </div>
+          <div class="action-item save-action">
+            <i class="fa-regular fa-bookmark"></i><span>Save</span>
+          </div>
+          <div class="action-item options-action">
+            <i class="fa-solid fa-ellipsis"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- REEL 2 -->
+      <div class="reel-item" data-video-src="media/reel.mp4">
+        <div class="reel-progress"><div class="reel-progress-bar"></div></div>
+        <video
+          class="reel-video"
+          src="media/reel.mp4"
+          loop
+          muted
+          playsinline
+        ></video>
+        <i class="fa-solid fa-play play-indicator"></i>
+        <i class="fa-solid fa-heart double-tap-heart"></i>
+
+        <div class="reel-overlay">
+          <div class="reel-user">
+            <img src="media/OLD SCHOOL.png" alt="Alex" />
+            <span>alex_rivera</span>
+            <button class="follow-btn-small">Follow</button>
+          </div>
+          <div class="reel-caption">
+            City lights and late nights 🌃 Never gets old. #nyc #nightlife
+          </div>
+          <div class="reel-music">
+            <i class="fa-solid fa-compact-disc"></i
+            ><span>Midnight City - M83</span>
+          </div>
+        </div>
+
+        <div class="reel-actions">
+          <div class="reel-avatar-action">
+            <img src="media/OLD SCHOOL.png" alt="Alex" />
+            <div class="add-icon"><i class="fa-solid fa-plus"></i></div>
+          </div>
+          <div class="action-item like-action">
+            <i class="fa-regular fa-heart"></i><span>8.2K</span>
+          </div>
+          <div class="action-item comment-action">
+            <i class="fa-regular fa-comment"></i><span>128</span>
+          </div>
+          <div class="action-item share-action">
+            <i class="fa-regular fa-paper-plane"></i><span>Share</span>
+          </div>
+          <div class="action-item save-action">
+            <i class="fa-regular fa-bookmark"></i><span>Save</span>
+          </div>
+          <div class="action-item options-action">
+            <i class="fa-solid fa-ellipsis"></i>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ================= COMMENTS MODAL ================= -->
+    <div class="reel-modal-overlay" id="commentsModal">
+      <div class="reel-bottom-sheet">
+        <div class="sheet-header">
+          <h3>Comments <span id="commentCount">342</span></h3>
+          <button class="close-sheet" id="closeComments">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="comments-list" id="commentsList"></div>
+        <div class="comment-input-area">
+          <img src="media/HIM.jpeg" class="comment-avatar" alt="You" />
+          <input
+            type="text"
+            id="newCommentInput"
+            placeholder="Add a comment..."
+          />
+          <button class="post-comment-btn" id="postCommentBtn">Post</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SHARE MODAL ================= -->
+    <div class="reel-modal-overlay" id="shareModal">
+      <div class="reel-bottom-sheet share-sheet">
+        <div class="sheet-header">
+          <h3>Share to</h3>
+          <button class="close-sheet" id="closeShare">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="share-grid">
+          <div class="share-item" onclick="copyLink()">
+            <i class="fa-solid fa-link"></i><span>Copy Link</span>
+          </div>
+          <div class="share-item">
+            <i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span>
+          </div>
+          <div class="share-item">
+            <i class="fa-regular fa-paper-plane"></i><span>Messages</span>
+          </div>
+          <div class="share-item">
+            <i class="fa-brands fa-telegram"></i><span>Telegram</span>
+          </div>
+          <div class="share-item">
+            <i class="fa-solid fa-plus-circle"></i><span>Add to Story</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= OPTIONS DROPDOWN ================= -->
+    <div class="reel-options-menu" id="optionsMenu">
+      <button class="option-item">
+        <i class="fa-regular fa-circle-xmark"></i> Not Interested
+      </button>
+      <button class="option-item">
+        <i class="fa-regular fa-eye-slash"></i> Mute Audio
+      </button>
+      <div class="option-divider"></div>
+      <button class="option-item danger">
+        <i class="fa-solid fa-flag"></i> Report
+      </button>
+    </div>
+
+    <!-- ================= TOAST NOTIFICATION ================= -->
+    <div class="reel-toast" id="reelToast">Saved to collection</div>
+
+    <!-- ================= BOTTOM NAV ================= -->
+    <nav class="bottom-nav">
+      <a href="QWEN2.html" class="nav-item"
+        ><i class="fa-solid fa-house"></i><span>Home</span></a
+      >
+      <a href="ORION EXPLORE.HTML" class="nav-item"
+        ><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></a
+      >
+      <a href="orion create.html" class="nav-item active"
+        ><i class="fa-solid fa-video"></i><span>Reels</span></a
+      >
+      <a href="chat.html" class="nav-item"
+        ><i class="fa-regular fa-paper-plane"></i><span>Messages</span></a
+      >
+      <a href="profile(1).html" class="nav-item"
+        ><i class="fa-regular fa-user"></i><span>Profile</span></a
+      >
+    </nav>
+
+    <!-- ================= SCRIPTS ================= -->
+    <script>
+      // 1. Splash Screen
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          const splash = document.getElementById("splash-screen");
+          if (splash) {
+            splash.classList.add("fade-out");
+            setTimeout(() => {
+              splash.style.display = "none";
+            }, 600);
+          }
+        }, 1500);
+      });
+
+      // 2. Dark Mode Sync
+      if (localStorage.getItem("orion-theme") === "dark")
+        document.body.classList.add("dark-mode");
+
+      // 3. Reels Auto-Play Logic
+      const reelsFeed = document.getElementById("reelsFeed");
+      const reelItems = document.querySelectorAll(".reel-item");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const video = entry.target.querySelector("video");
+            const progressBar =
+              entry.target.querySelector(".reel-progress-bar");
+            if (entry.isIntersecting) {
+              video.play().catch(() => {});
+              const update = () => {
+                if (!video.paused && video.duration) {
+                  progressBar.style.width = `${(video.currentTime / video.duration) * 100}%`;
+                  requestAnimationFrame(update);
+                }
+              };
+              video.addEventListener("play", update);
+            } else {
+              video.pause();
+              video.currentTime = 0;
+              progressBar.style.width = "0%";
+            }
+          });
+        },
+        { root: reelsFeed, threshold: 0.6 },
+      );
+      reelItems.forEach((item) => observer.observe(item));
+
+      // 4. Tap & Double Tap Logic
+      reelItems.forEach((item) => {
+        const video = item.querySelector("video");
+        const playIndicator = item.querySelector(".play-indicator");
+        const heartIndicator = item.querySelector(".double-tap-heart");
+        const likeBtn = item.querySelector(".like-action");
+        let lastTap = 0;
+
+        item.addEventListener("click", (e) => {
+          if (
+            e.target.closest(".reel-actions") ||
+            e.target.closest(".reel-user")
+          )
+            return;
+          const currentTime = new Date().getTime();
+          const tapLength = currentTime - lastTap;
+
+          if (tapLength < 300 && tapLength > 0) {
+            heartIndicator.classList.add("animate");
+            likeBtn.classList.add("liked");
+            likeBtn
+              .querySelector("i")
+              .classList.replace("fa-regular", "fa-solid");
+            setTimeout(() => heartIndicator.classList.remove("animate"), 800);
+          } else {
+            if (video.paused) {
+              video.play();
+              playIndicator.className = "fa-solid fa-play play-indicator show";
+              setTimeout(() => playIndicator.classList.remove("show"), 600);
+            } else {
+              video.pause();
+              playIndicator.className = "fa-solid fa-pause play-indicator show";
+              setTimeout(() => playIndicator.classList.remove("show"), 600);
+            }
+          }
+          lastTap = currentTime;
+        });
+
+        likeBtn.addEventListener("click", () => {
+          likeBtn.classList.toggle("liked");
+          const icon = likeBtn.querySelector("i");
+          icon.classList.toggle("fa-regular");
+          icon.classList.toggle("fa-solid");
+        });
+      });
+
+      // 5. Follow Button Toggle
+      document.querySelectorAll(".follow-btn-small").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const addIcon = this.parentElement.querySelector(".add-icon");
+          if (this.innerText === "Follow") {
+            this.innerText = "Following";
+            this.classList.add("following");
+            if (addIcon) addIcon.style.display = "none";
+          } else {
+            this.innerText = "Follow";
+            this.classList.remove("following");
+            if (addIcon) addIcon.style.display = "flex";
+          }
+        });
+      });
+
+      // 6. Interactive Actions (Comments, Share, Save, Options)
+      const commentsModal = document.getElementById("commentsModal");
+      const shareModal = document.getElementById("shareModal");
+      const optionsMenu = document.getElementById("optionsMenu");
+      const reelToast = document.getElementById("reelToast");
+      const commentsList = document.getElementById("commentsList");
+      const newCommentInput = document.getElementById("newCommentInput");
+      const postCommentBtn = document.getElementById("postCommentBtn");
+
+      function showToast(message) {
+        reelToast.innerText = message;
+        reelToast.classList.add("show");
+        setTimeout(() => reelToast.classList.remove("show"), 2000);
+      }
+
+      const mockComments = [
+        {
+          user: "alex_rivera",
+          avatar: "media/OLD SCHOOL.png",
+          text: "This is absolutely stunning! 😍",
+          time: "2h",
+        },
+        {
+          user: "john_doe",
+          avatar: "media/kagurabachi.jpg",
+          text: "Where exactly is this in Paris?",
+          time: "5h",
+        },
+        {
+          user: "emma_w",
+          avatar: "media/wind breaker..jpg",
+          text: "Adding this to my bucket list ASAP.",
+          time: "1d",
+        },
+      ];
+
+      reelItems.forEach((item) => {
+        // SAVE
+        const saveBtn = item.querySelector(".save-action");
+        saveBtn.addEventListener("click", () => {
+          const icon = saveBtn.querySelector("i");
+          if (icon.classList.contains("fa-solid")) {
+            icon.classList.replace("fa-solid", "fa-regular");
+            saveBtn.classList.remove("saved");
+            showToast("Removed from saved");
+          } else {
+            icon.classList.replace("fa-regular", "fa-solid");
+            saveBtn.classList.add("saved");
+            showToast("Saved to collection");
+          }
+        });
+
+        // COMMENTS
+        const commentBtn = item.querySelector(".comment-action");
+        commentBtn.addEventListener("click", () => {
+          commentsList.innerHTML = "";
+          mockComments.forEach((c) => {
+            const div = document.createElement("div");
+            div.className = "comment-item";
+            div.innerHTML = `<img src="${c.avatar}" class="comment-avatar" alt="${c.user}" />
+              <div class="comment-body">
+                <div class="comment-user">${c.user}</div>
+                <div class="comment-text">${c.text}</div>
+                <div class="comment-meta"><span>${c.time}</span><span>Reply</span><span>Like</span></div>
+              </div>`;
+            commentsList.appendChild(div);
+          });
+          commentsModal.classList.add("active");
+        });
+
+        // SHARE
+        const shareBtn = item.querySelector(".share-action");
+        shareBtn.addEventListener("click", () =>
+          shareModal.classList.add("active"),
+        );
+
+        // OPTIONS
+        const optionsBtn = item.querySelector(".options-action");
+        optionsBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const rect = optionsBtn.getBoundingClientRect();
+          optionsMenu.style.bottom = `${window.innerHeight - rect.top + 10}px`;
+          optionsMenu.style.right = `${window.innerWidth - rect.right}px`;
+          optionsMenu.classList.toggle("show");
+        });
+      });
+
+      // Close Modals
+      document
+        .getElementById("closeComments")
+        .addEventListener("click", () =>
+          commentsModal.classList.remove("active"),
+        );
+      document
+        .getElementById("closeShare")
+        .addEventListener("click", () => shareModal.classList.remove("active"));
+      commentsModal.addEventListener("click", (e) => {
+        if (e.target === commentsModal)
+          commentsModal.classList.remove("active");
+      });
+      shareModal.addEventListener("click", (e) => {
+        if (e.target === shareModal) shareModal.classList.remove("active");
+      });
+      document.addEventListener("click", (e) => {
+        if (
+          !e.target.closest(".reel-options-menu") &&
+          !e.target.closest(".options-action")
+        )
+          optionsMenu.classList.remove("show");
+      });
+
+      // Comment Input Logic
+      newCommentInput.addEventListener("input", () => {
+        postCommentBtn.classList.toggle(
+          "active",
+          newCommentInput.value.trim().length > 0,
+        );
+      });
+      postCommentBtn.addEventListener("click", () => {
+        const text = newCommentInput.value.trim();
+        if (text) {
+          const div = document.createElement("div");
+          div.className = "comment-item";
+          div.innerHTML = `<img src="media/HIM.jpeg" class="comment-avatar" alt="You" />
+            <div class="comment-body">
+              <div class="comment-user">You</div>
+              <div class="comment-text">${text}</div>
+              <div class="comment-meta"><span>Just now</span><span>Reply</span><span>Like</span></div>
+            </div>`;
+          commentsList.prepend(div);
+          newCommentInput.value = "";
+          postCommentBtn.classList.remove("active");
+          showToast("Comment posted");
+        }
+      });
+
+      window.copyLink = function () {
+        showToast("Link copied to clipboard");
+        shareModal.classList.remove("active");
+      };
+    </script>
+  </body>
+</html>

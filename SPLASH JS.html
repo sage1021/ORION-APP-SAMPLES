@@ -1,0 +1,15 @@
+  <script>
+    // Splash Screen Logic (Paste at the bottom of EVERY file)
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        const splash = document.getElementById("splash-screen");
+        if (splash) {
+          splash.classList.add("fade-out");
+          setTimeout(() => {
+            splash.style.display = "none";
+          }, 600);
+        }
+      }, 1500); // Shows for 1.5 seconds
+    });
+  </script>
+</body>

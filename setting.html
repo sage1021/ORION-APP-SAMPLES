@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ORION - Settings</title>
+    <link rel="icon" type="image/x-icon" href="media/MINI LOGO 1.jpg" />
+    <link rel="stylesheet" href="Qwen.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- ================= SPLASH SCREEN ================= -->
+    <div id="splash-screen">
+      <div class="splash-content">
+        <img
+          src="media/MINI_LOGO no bg.png"
+          alt="Orion Logo"
+          class="splash-logo"
+        />
+        <div class="loading-ring"></div>
+      </div>
+    </div>
+
+    <!-- ================= HEADER ================= -->
+    <header class="main-header">
+      <div class="container header-container">
+        <div class="logo-div">
+          <img
+            src="media/ORION_logo_ GRADIENT no bg.png"
+            alt="ORION Logo"
+            class="logo"
+          />
+        </div>
+
+        <!-- Added Theme Toggle and Menu for consistency -->
+        <div class="header-actions">
+          <button
+            class="icon-btn theme-toggle"
+            id="themeToggle"
+            title="Toggle Dark Mode"
+          >
+            <i class="fa-solid fa-moon"></i>
+          </button>
+
+          <div class="menu-div">
+            <button id="menu-btn" class="menu-btn">
+              <img src="media/HIM.jpeg" alt="Menu" class="menu-avatar" />
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <ul id="dropdown">
+              <li>
+                <a href="profile(1).html"
+                  ><i class="fa-regular fa-user"></i> Profile</a
+                >
+              </li>
+              <li>
+                <a href="dashboard.html"
+                  ><i class="fa-solid fa-chart-line"></i> Dashboard</a
+                >
+              </li>
+              <li>
+                <a href="setting.html"
+                  ><i class="fa-solid fa-gear"></i> Settings</a
+                >
+              </li>
+              <li class="divider"></li>
+              <li>
+                <a href="login.html"
+                  ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="container" style="padding-top: 20px">
+      <h2 class="page-title">Settings</h2>
+
+      <!-- ACCOUNT ACCORDION -->
+      <div class="list-card">
+        <!-- Clickable Header -->
+        <div class="account-header-toggle" id="accountToggle">
+          <div class="account-info-row">
+            <i class="fa-solid fa-user"></i>
+            <span>Account</span>
+          </div>
+          <i
+            class="fa-solid fa-chevron-down chevron-icon"
+            id="accountChevron"
+          ></i>
+        </div>
+
+        <!-- Expandable Content -->
+        <div class="account-content" id="accountContent">
+          <div class="account-details">
+            <div class="account-avatar">
+              <img src="media/HIM.jpeg" alt="Your Profile" />
+            </div>
+            <div class="account-info">
+              <h3>Micah</h3>
+              <p>@djenzo1434</p>
+            </div>
+          </div>
+
+          <div class="account-actions">
+            <a href="profile(1).html" class="account-btn">
+              <i class="fa-regular fa-user"></i> Manage Account
+            </a>
+            <a href="login.html" class="account-btn add-account">
+              <i class="fa-solid fa-plus"></i> Add Account
+            </a>
+          </div>
+        </div>
+
+        <!-- OTHER SETTINGS -->
+        <a href="#" class="list-item">
+          <i class="fa-solid fa-lock"></i>
+          <span>Privacy</span>
+          <i class="fa-solid fa-chevron-right chevron"></i>
+        </a>
+        <a href="ORION ACTIVITY.HTML" class="list-item">
+          <i class="fa-solid fa-bell"></i>
+          <span>Notifications</span>
+          <i class="fa-solid fa-chevron-right chevron"></i>
+        </a>
+        <a href="#" class="list-item">
+          <i class="fa-solid fa-circle-question"></i>
+          <span>Help & Support</span>
+          <i class="fa-solid fa-chevron-right chevron"></i>
+        </a>
+      </div>
+
+      <!-- LOGOUT CARD -->
+      <div class="list-card">
+        <a href="login.html" class="list-item logout">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </main>
+
+    <!-- ================= BOTTOM NAV ================= -->
+    <nav class="bottom-nav">
+      <a href="QWEN2.html" class="nav-item">
+        <i class="fa-solid fa-house"></i><span>Home</span>
+      </a>
+      <a href="ORION EXPLORE.HTML" class="nav-item">
+        <i class="fa-solid fa-magnifying-glass"></i><span>Search</span>
+      </a>
+      <a href="orion create.html" class="nav-item">
+        <i class="fa-regular fa-square-plus"></i><span>Create</span>
+      </a>
+      <a href="ORION ACTIVITY.HTML" class="nav-item">
+        <i class="fa-regular fa-heart"></i><span>Activity</span>
+      </a>
+      <a href="profile(1).html" class="nav-item">
+        <i class="fa-regular fa-user"></i><span>Profile</span>
+      </a>
+    </nav>
+
+    <!-- ================= SCRIPTS ================= -->
+    <script>
+      // 1. Splash Screen Logic
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          const splash = document.getElementById("splash-screen");
+          if (splash) {
+            splash.classList.add("fade-out");
+            setTimeout(() => {
+              splash.style.display = "none";
+            }, 600);
+          }
+        }, 1500);
+      });
+
+      // 2. Dark Mode Sync
+      const themeToggle = document.getElementById("themeToggle");
+      const themeIcon = themeToggle?.querySelector("i");
+      const body = document.body;
+
+      const savedTheme = localStorage.getItem("orion-theme");
+      if (savedTheme === "dark") {
+        body.classList.add("dark-mode");
+        themeIcon?.classList.replace("fa-moon", "fa-sun");
+      }
+
+      themeToggle?.addEventListener("click", () => {
+        body.classList.toggle("dark-mode");
+        if (body.classList.contains("dark-mode")) {
+          themeIcon?.classList.replace("fa-moon", "fa-sun");
+          localStorage.setItem("orion-theme", "dark");
+        } else {
+          themeIcon?.classList.replace("fa-sun", "fa-moon");
+          localStorage.setItem("orion-theme", "light");
+        }
+      });
+
+      // 3. Menu Dropdown
+      const menuBtn = document.getElementById("menu-btn");
+      const dropdown = document.getElementById("dropdown");
+      menuBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown.style.display =
+          dropdown.style.display === "block" ? "none" : "block";
+      });
+      window.addEventListener("click", () => {
+        if (dropdown) dropdown.style.display = "none";
+      });
+
+      // 4. Account Accordion Logic
+      const accountToggle = document.getElementById("accountToggle");
+      const accountContent = document.getElementById("accountContent");
+      const accountChevron = document.getElementById("accountChevron");
+
+      accountToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        accountContent.classList.toggle("active");
+
+        if (accountContent.classList.contains("active")) {
+          accountChevron.style.transform = "rotate(180deg)";
+        } else {
+          accountChevron.style.transform = "rotate(0deg)";
+        }
+      });
+
+      // Prevent closing when clicking INSIDE the account content
+      accountContent.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+
+      // Close only when clicking completely outside the list-card
+      window.addEventListener("click", (e) => {
+        if (!e.target.closest(".list-card")) {
+          accountContent.classList.remove("active");
+          accountChevron.style.transform = "rotate(0deg)";
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,290 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(90deg, wheat, burlywood, #6ea76d);
+  background-size: 400% 100%;
+  animation: flowGradient 15s ease infinite;
+  min-height: 100vh;
+}
+
+@keyframes flowGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+#splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, wheat, burlywood, #6ea76d, wheat);
+  background-size: 400% 100%;
+  animation: flowGradient 15s ease infinite;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition:
+    opacity 0.6s ease,
+    visibility 0.6s ease;
+}
+
+#splash-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.splash-content {
+  text-align: center;
+  color: #fff;
+}
+.splash-logo {
+  width: 150px; /* Adjust this to make your logo bigger or smaller */
+  height: auto;
+  object-fit: contain;
+  animation: pulseLogo 2s infinite alternate;
+  filter: drop-shadow(
+    0 4px 15px rgba(0, 0, 0, 0.2)
+  ); /* Adds a nice shadow to the PNG */
+}
+
+.splash-tagline {
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-top: 10px;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.loading-ring {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  margin: 30px auto 0;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes pulseLogo {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================= NAV ================= */
+.nav {
+  position: fixed;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 40px;
+  height: 80px;
+  box-sizing: border-box;
+  z-index: 100;
+  background: linear-gradient(rgba(39, 39, 39, 0.2), transparent);
+}
+
+.logo {
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.nav-button .btn {
+  background: #8b4513;
+  width: 120px;
+  height: 40px;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+#registerBtn {
+  margin-left: 15px;
+}
+
+.btn.green-btn:hover {
+  background: #6ea76d;
+}
+
+/* ================= FORM WRAPPER ================= */
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 80px;
+  box-sizing: border-box;
+}
+
+.form-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 512px;
+  height: 520px;
+  background-image: url(media/lagbaja.jpg); /* Added dark background so white text is visible */
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* ================= FORM CONTAINERS ================= */
+.login-container,
+.register-container {
+  position: absolute;
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 30px;
+  transition: 0.5s ease-in-out;
+}
+
+.login-container {
+  left: 4px;
+}
+
+.register-container {
+  right: -520px;
+}
+
+.top {
+  text-align: center;
+}
+
+.top span {
+  color: #fff;
+  font-size: 14px;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.top span a {
+  font-weight: 500;
+  color: #fff;
+  margin-left: 5px;
+  text-decoration: none;
+}
+
+header {
+  color: #fff;
+  font-size: 30px;
+  text-align: center;
+  padding: 10px 0 20px 0;
+  margin: 0;
+}
+
+/* ================= INPUTS ================= */
+.input-box {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.input-field {
+  font-size: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  height: 50px;
+  width: 100%;
+  padding: 0 10px 0 45px;
+  border: none;
+  border-radius: 30px;
+  outline: none;
+  box-sizing: border-box;
+  transition: 0.2s ease;
+}
+
+.input-field:hover,
+.input-field:focus {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.input-field::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.input-box i {
+  position: absolute;
+  top: 50%;
+  left: 17px;
+  transform: translateY(-50%);
+  color: #fff;
+  font-size: 16px;
+}
+
+.submit {
+  font-size: 15px;
+  font-weight: 500;
+  color: black;
+  height: 45px;
+  width: 100%;
+  border: none;
+  border-radius: 30px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  margin-top: 10px;
+}
+
+.submit:hover {
+  background: #fff;
+  box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* ================= FOOTER LINKS ================= */
+.two-col {
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+  font-size: 13px;
+  margin-top: 15px;
+}
+
+.two-col .one {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.two-col label a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.two-col label a:hover {
+  text-decoration: underline;
+}

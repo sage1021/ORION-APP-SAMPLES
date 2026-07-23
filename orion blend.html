@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="media/MINI LOGO 1.jpg" />
+    <link rel="stylesheet" href="blend.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>ORION - Home</title>
+  </head>
+  <body>
+    <!-- ================= COSMIC BACKGROUND ================= -->
+    <div class="cosmic-bg">
+      <div class="gradient-orb orb-1"></div>
+      <div class="gradient-orb orb-2"></div>
+      <div class="gradient-orb orb-3"></div>
+      <canvas id="particleCanvas"></canvas>
+    </div>
+
+    <!-- ================= SPLASH SCREEN ================= -->
+    <div id="splash-screen">
+      <div class="splash-content">
+        <h1 class="splash-title">ORION</h1>
+        <div class="loading-ring"></div>
+        <p class="splash-tagline">Where conversations become art</p>
+      </div>
+    </div>
+
+    <!-- ================= HEADER ================= -->
+    <header class="main-header glass">
+      <div class="container header-container">
+        <div class="logo-div">
+          <span class="logo-text">O<span class="logo-accent">R</span>ION</span>
+        </div>
+
+        <div class="search-bar glass-subtle">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" placeholder="Search the cosmos..." />
+        </div>
+
+        <div class="header-actions">
+          <button class="icon-btn glow-hover" id="openChatBtn" title="Messages">
+            <i class="fa-regular fa-paper-plane"></i>
+            <span class="notification-dot">3</span>
+          </button>
+          <button
+            class="icon-btn glow-hover"
+            id="openActivityBtn"
+            title="Activity"
+          >
+            <i class="fa-regular fa-heart"></i>
+          </button>
+          <div class="menu-div">
+            <button id="menu-btn" class="menu-btn glass-subtle">
+              <img src="media/HIM.jpeg" alt="Menu" class="menu-avatar" />
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <ul id="dropdown" class="glass">
+              <li>
+                <a href="profile(1).html"
+                  ><i class="fa-regular fa-user"></i> Profile</a
+                >
+              </li>
+              <li>
+                <a href="dashboard.html"
+                  ><i class="fa-solid fa-chart-line"></i> Dashboard</a
+                >
+              </li>
+              <li>
+                <a href="setting.html"
+                  ><i class="fa-solid fa-gear"></i> Settings</a
+                >
+              </li>
+              <li class="divider"></li>
+              <li>
+                <a href="login.html"
+                  ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container main-content">
+      <!-- ================= ORION MOOD (Artistic Hero) ================= -->
+      <section class="orion-mood glass">
+        <div class="mood-content">
+          <span class="mood-label">Tonight's Vibe</span>
+          <h2 class="mood-quote">
+            "The cosmos is within us. We are made of star-stuff."
+          </h2>
+          <span class="mood-author">— Carl Sagan</span>
+        </div>
+        <div class="mood-art">
+          <div class="floating-star s1">✦</div>
+          <div class="floating-star s2">✧</div>
+          <div class="floating-star s3">✦</div>
+        </div>
+      </section>
+
+      <!-- ================= STORIES ================= -->
+      <section class="stories-section">
+        <div class="section-header">
+          <h3>Stories</h3>
+          <a href="#" class="see-all"
+            >See all <i class="fa-solid fa-arrow-right"></i
+          ></a>
+        </div>
+        <div class="story-div">
+          <div class="story" id="myStory" data-story-type="none">
+            <div class="story-circle add-story" id="myStoryCircle">
+              <div class="story-inner">
+                <img src="media/obito.gif" alt="You" id="myStoryImg" />
+              </div>
+              <span class="add-badge" id="myStoryBadge"
+                ><i class="fa-solid fa-plus"></i
+              ></span>
+            </div>
+            <p>You</p>
+            <input
+              type="file"
+              id="myStoryInput"
+              accept="image/*, video/*"
+              hidden
+            />
+          </div>
+
+          <div class="story" data-story-video="media/reel.mp4">
+            <div class="story-circle online cosmic-ring">
+              <div class="story-inner">
+                <img src="media/OLD SCHOOL.png" alt="Alex" />
+              </div>
+              <span class="status-dot online-status"></span>
+            </div>
+            <p>Alex</p>
+          </div>
+
+          <div class="story" data-story-img="media/halo.jpg">
+            <div class="story-circle online cosmic-ring">
+              <div class="story-inner">
+                <img src="media/halo.jpg" alt="Sarah" />
+              </div>
+              <span class="status-dot online-status"></span>
+            </div>
+            <p>Sarah</p>
+          </div>
+
+          <div class="story" data-story-img="media/kagurabachi.jpg">
+            <div class="story-circle away cosmic-ring">
+              <div class="story-inner">
+                <img src="media/kagurabachi.jpg" alt="John" />
+              </div>
+              <span class="status-dot away-status"></span>
+            </div>
+            <p>John</p>
+          </div>
+
+          <div class="story" data-story-img="media/halo.jpg">
+            <div class="story-circle busy cosmic-ring">
+              <div class="story-inner">
+                <img src="media/halo.jpg" alt="Emma" />
+              </div>
+              <span class="status-dot busy-status"></span>
+            </div>
+            <p>Emma</p>
+          </div>
+
+          <div class="story" data-story-img="media/HIM.jpeg">
+            <div class="story-circle offline cosmic-ring">
+              <div class="story-inner">
+                <img src="media/HIM.jpeg" alt="Mike" />
+              </div>
+              <span class="status-dot offline-status"></span>
+            </div>
+            <p>Mike</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TRENDING NOW ================= -->
+      <section class="trending-section glass">
+        <div class="section-header">
+          <h3><i class="fa-solid fa-fire"></i> Trending in Orion</h3>
+        </div>
+        <div class="trending-grid">
+          <div class="trend-card">
+            <span class="trend-tag">#CosmicArt</span>
+            <span class="trend-count">12.4k posts</span>
+          </div>
+          <div class="trend-card">
+            <span class="trend-tag">#MidnightVibes</span>
+            <span class="trend-count">8.9k posts</span>
+          </div>
+          <div class="trend-card">
+            <span class="trend-tag">#StarGazing</span>
+            <span class="trend-count">5.2k posts</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= FEED ================= -->
+      <section class="feed-section">
+        <div class="section-header">
+          <h3>Your Feed</h3>
+          <div class="feed-filters">
+            <button class="filter-btn active">For You</button>
+            <button class="filter-btn">Following</button>
+            <button class="filter-btn">Trending</button>
+          </div>
+        </div>
+
+        <!-- POST 1 -->
+        <div class="post glass">
+          <div class="post-header">
+            <div class="profile">
+              <div class="avatar cosmic-ring">
+                <img src="media/post 1.jpg" alt="Joshua" />
+              </div>
+              <div class="profile-info">
+                <h4>
+                  Joshua
+                  <span class="verified"
+                    ><i class="fa-solid fa-circle-check"></i
+                  ></span>
+                </h4>
+                <p class="location">
+                  <i class="fa-solid fa-location-dot"></i> Tokyo, Japan
+                </p>
+              </div>
+            </div>
+            <button class="post-menu">
+              <i class="fa-solid fa-ellipsis"></i>
+            </button>
+          </div>
+          <div class="post-image">
+            <img src="media/kagurabachi.jpg" alt="Post by Joshua" />
+            <div class="post-image-overlay">
+              <span class="image-tag">📍 Shibuya</span>
+            </div>
+          </div>
+          <div class="post-actions">
+            <div class="action-left">
+              <button class="action-btn like-btn">
+                <i class="fa-regular fa-heart"></i>
+              </button>
+              <button class="action-btn comment-btn">
+                <i class="fa-regular fa-comment"></i>
+              </button>
+              <button class="action-btn">
+                <i class="fa-regular fa-paper-plane"></i>
+              </button>
+              <button class="action-btn reaction-btn" title="React">
+                <i class="fa-regular fa-face-smile"></i>
+              </button>
+            </div>
+            <button class="action-btn bookmark-btn">
+              <i class="fa-regular fa-bookmark"></i>
+            </button>
+          </div>
+          <div class="post-info">
+            <p class="likes"><b>1,245 likes</b></p>
+            <p class="caption">
+              <b>Joshua</b> The game in Japan was amazing ✨
+            </p>
+            <p class="comments-preview">View all 48 comments</p>
+            <p class="timestamp">2 hours ago</p>
+          </div>
+          <!-- Reaction Picker -->
+          <div class="reaction-picker">
+            <span class="reaction" data-reaction="❤️">❤️</span>
+            <span class="reaction" data-reaction="🔥">🔥</span>
+            <span class="reaction" data-reaction="😂">😂</span>
+            <span class="reaction" data-reaction="😮">😮</span>
+            <span class="reaction" data-reaction="🎉">🎉</span>
+            <span class="reaction" data-reaction="✦">✦</span>
+          </div>
+        </div>
+
+        <!-- POST 2 -->
+        <div class="post glass">
+          <div class="post-header">
+            <div class="profile">
+              <div class="avatar cosmic-ring">
+                <img src="media/draken.jpg" alt="Alex" />
+              </div>
+              <div class="profile-info">
+                <h4>Alex Rivera</h4>
+                <p class="location">
+                  <i class="fa-solid fa-location-dot"></i> New York, USA
+                </p>
+              </div>
+            </div>
+            <button class="post-menu">
+              <i class="fa-solid fa-ellipsis"></i>
+            </button>
+          </div>
+          <div class="post-image">
+            <img src="media/post 2.jpg" alt="Post by Alex" />
+          </div>
+          <div class="post-actions">
+            <div class="action-left">
+              <button class="action-btn like-btn">
+                <i class="fa-regular fa-heart"></i>
+              </button>
+              <button class="action-btn comment-btn">
+                <i class="fa-regular fa-comment"></i>
+              </button>
+              <button class="action-btn">
+                <i class="fa-regular fa-paper-plane"></i>
+              </button>
+              <button class="action-btn reaction-btn">
+                <i class="fa-regular fa-face-smile"></i>
+              </button>
+            </div>
+            <button class="action-btn bookmark-btn">
+              <i class="fa-regular fa-bookmark"></i>
+            </button>
+          </div>
+          <div class="post-info">
+            <p class="likes"><b>892 likes</b></p>
+            <p class="caption">
+              <b>Alex Rivera</b> City lights and late nights ✨
+            </p>
+            <p class="timestamp">4 hours ago</p>
+          </div>
+          <div class="reaction-picker">
+            <span class="reaction">❤️</span><span class="reaction">🔥</span>
+            <span class="reaction">😂</span><span class="reaction">😮</span>
+            <span class="reaction">🎉</span><span class="reaction">✦</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= LIVE ACTIVITY TICKER ================= -->
+      <section class="live-ticker glass">
+        <span class="live-dot"></span>
+        <div class="ticker-content">
+          <span><b>Sarah</b> just posted a new story</span>
+          <span>•</span>
+          <span><b>Alex</b> liked your photo</span>
+          <span>•</span>
+          <span><b>John</b> started following you</span>
+        </div>
+      </section>
+    </div>
+
+    <!-- ================= BOTTOM NAV ================= -->
+    <nav class="bottom-nav glass">
+      <a href="QWEN2.html" class="nav-item active"
+        ><i class="fa-solid fa-house"></i><span>Home</span></a
+      >
+      <a href="ORION EXPLORE.HTML" class="nav-item"
+        ><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></a
+      >
+      <a href="#" class="nav-item create-btn" id="openCreateBtn"
+        ><i class="fa-regular fa-square-plus"></i><span>Create</span></a
+      >
+      <a href="ORION ACTIVITY.HTML" class="nav-item"
+        ><i class="fa-regular fa-heart"></i><span>Activity</span></a
+      >
+      <a href="profile(1).html" class="nav-item"
+        ><i class="fa-regular fa-user"></i><span>Profile</span></a
+      >
+    </nav>
+
+    <!-- ================= CREATE MODAL ================= -->
+    <div class="modal-overlay" id="createModal">
+      <div class="create-modal glass">
+        <button class="close-modal" id="closeCreateBtn">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <h2>Create New Post</h2>
+        <div class="create-card">
+          <div class="upload-area" id="uploadArea">
+            <i class="fa-regular fa-image"></i>
+            <p id="uploadText">Tap to upload photo or video</p>
+            <input
+              type="file"
+              id="fileInput"
+              accept="image/*, video/*"
+              hidden
+            />
+          </div>
+          <div id="previewContainer" style="display: none">
+            <img id="imagePreview" style="display: none" />
+            <video id="videoPreview" controls style="display: none"></video>
+          </div>
+          <textarea
+            placeholder="Write a caption..."
+            id="captionInput"
+          ></textarea>
+          <button class="post-btn gradient-btn">Share Post</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= STORY VIEWER ================= -->
+    <div class="story-viewer" id="storyViewer">
+      <div class="story-progress-bar">
+        <div class="story-progress" id="storyProgress"></div>
+      </div>
+      <button class="close-story" id="closeStory">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="story-viewer-content">
+        <div class="story-user-info">
+          <img src="" class="story-viewer-avatar" id="viewerAvatar" />
+          <span id="viewerUsername">User</span>
+        </div>
+        <div class="story-media-container" id="viewerMedia"></div>
+      </div>
+    </div>
+
+    <!-- ================= ACTIVITY MODAL ================= -->
+    <div class="side-modal-overlay" id="activityModal">
+      <div class="side-modal-content glass">
+        <div class="modal-header">
+          <h3>Activity</h3>
+          <button class="close-side-modal" id="closeActivityBtn">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="activity-list">
+          <div class="activity-item">
+            <img src="media/halo.jpg" class="activity-avatar" alt="Alex" />
+            <div class="activity-text">
+              <b>Alex Rivera</b> liked your photo.
+              <span class="activity-time">2h</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <img
+              src="media/meme 2 naruto.jpg"
+              class="activity-avatar"
+              alt="Sarah"
+            />
+            <div class="activity-text">
+              <b>Sarah Chen</b> started following you.
+              <span class="activity-time">5h</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <img src="media/lagbaja.jpg" class="activity-avatar" alt="John" />
+            <div class="activity-text">
+              <b>John Martinez</b> commented: "Amazing shot!"
+              <span class="activity-time">1d</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= CHAT MODAL (WhatsApp + Telegram Blend) ================= -->
+    <div class="side-modal-overlay" id="chatModal">
+      <div class="side-modal-content chat-modal-content glass">
+        <!-- Chat List View -->
+        <div id="chatListView">
+          <div class="modal-header">
+            <h3>Messages</h3>
+            <button class="close-side-modal" id="closeChatBtn">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <!-- Telegram-style Chat Folders -->
+          <div class="chat-folders">
+            <button class="folder-btn active">All</button>
+            <button class="folder-btn">
+              Unread <span class="folder-badge">2</span>
+            </button>
+            <button class="folder-btn">Groups</button>
+            <button class="folder-btn">Channels</button>
+          </div>
+          <div class="chat-list">
+            <div
+              class="chat-item"
+              onclick="openActiveChat('Alex Rivera', 'media/OLD SCHOOL.png')"
+            >
+              <img src="media/OLD SCHOOL.png" class="chat-avatar" alt="Alex" />
+              <div class="chat-info">
+                <div class="chat-header-row">
+                  <span class="chat-name">Alex Rivera</span>
+                  <span class="chat-time">10:42 AM</span>
+                </div>
+                <div class="chat-preview-row">
+                  <span class="chat-preview"
+                    >Hey! Did you see the new post?</span
+                  >
+                  <span class="unread-badge">2</span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="chat-item"
+              onclick="openActiveChat('Sarah Chen', 'media/halo.jpg')"
+            >
+              <img src="media/halo.jpg" class="chat-avatar" alt="Sarah" />
+              <div class="chat-info">
+                <div class="chat-header-row">
+                  <span class="chat-name">Sarah Chen</span>
+                  <span class="chat-time">Yesterday</span>
+                </div>
+                <div class="chat-preview-row">
+                  <span class="chat-preview">Sounds good, see you then!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Chat View -->
+        <div id="activeChatView" style="display: none">
+          <div class="modal-header chat-header-back">
+            <button class="icon-btn" id="backToChatListBtn">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <img
+              src=""
+              id="activeChatAvatar"
+              class="chat-avatar-small"
+              alt="User"
+            />
+            <div class="chat-user-details">
+              <span id="activeChatName" class="chat-name">User</span>
+              <span class="chat-status">Active now</span>
+            </div>
+            <div class="chat-actions">
+              <button class="icon-btn glow-hover">
+                <i class="fa-solid fa-phone"></i>
+              </button>
+              <button class="icon-btn glow-hover">
+                <i class="fa-solid fa-video"></i>
+              </button>
+            </div>
+          </div>
+          <!-- WhatsApp-style Encryption Badge -->
+          <div class="encryption-badge">
+            <i class="fa-solid fa-lock"></i>
+            <span>End-to-end encrypted · Messages disappear in 24h</span>
+          </div>
+          <div class="messages-area" id="messagesArea">
+            <div class="message received">
+              <p>Hey! How is the Orion app coming along?</p>
+              <span class="msg-time">10:40 AM</span>
+            </div>
+            <div class="message sent">
+              <p>It's going great! Just finished the Chat UI ✨</p>
+              <span class="msg-time"
+                >10:41 AM <i class="fa-solid fa-check-double msg-ticks read"></i
+              ></span>
+            </div>
+          </div>
+          <div class="chat-input-area">
+            <button class="icon-btn">
+              <i class="fa-regular fa-face-smile"></i>
+            </button>
+            <input
+              type="text"
+              id="chatMessageInput"
+              placeholder="Type a message..."
+            />
+            <button class="icon-btn" id="voiceNoteBtn">
+              <i class="fa-solid fa-microphone"></i>
+            </button>
+            <button
+              class="icon-btn send-btn gradient-btn"
+              id="sendChatMessageBtn"
+            >
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="blend.js"></script>
+  </body>
+</html>

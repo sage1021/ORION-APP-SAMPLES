@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ORION - Explore</title>
+    <link rel="icon" type="image/x-icon" href="media/MINI LOGO 1.jpg" />
+    <link rel="stylesheet" href="Qwen.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- ================= HEADER ================= -->
+    <header class="main-header">
+      <div class="container header-container">
+        <div class="logo-div">
+          <img
+            src="media/ORION_logo_ GRADIENT no bg.png"
+            alt="ORION Logo"
+            class="logo"
+          />
+        </div>
+
+        <div class="header-actions">
+          <button
+            class="icon-btn theme-toggle"
+            id="themeToggle"
+            title="Toggle Dark Mode"
+          >
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <button class="icon-btn">
+            <i class="fa-regular fa-paper-plane"></i>
+          </button>
+
+          <div class="menu-div">
+            <button id="menu-btn" class="menu-btn">
+              <img src="media/HIM.jpeg" alt="Menu" class="menu-avatar" />
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <ul id="dropdown">
+              <li>
+                <a href="profile.html"
+                  ><i class="fa-regular fa-user"></i> Profile</a
+                >
+              </li>
+              <li>
+                <a href="dashboard.html"
+                  ><i class="fa-solid fa-chart-line"></i> Dashboard</a
+                >
+              </li>
+              <li>
+                <a href="setting.html"
+                  ><i class="fa-solid fa-gear"></i> Settings</a
+                >
+              </li>
+              <li class="divider"></li>
+              <li>
+                <a href="login.html"
+                  ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="container" style="padding-top: 20px">
+      <!-- Search Bar -->
+      <div class="search-input-wrap">
+        <input
+          type="text"
+          id="exploreSearch"
+          placeholder="Search users, tags, or places..."
+        />
+      </div>
+
+      <!-- Category Filters -->
+      <div class="explore-filters">
+        <button class="explore-filter-btn active">All</button>
+        <button class="explore-filter-btn">Art & Design</button>
+        <button class="explore-filter-btn">Tech</button>
+        <button class="explore-filter-btn">Travel</button>
+        <button class="explore-filter-btn">Gaming</button>
+        <button class="explore-filter-btn">Food</button>
+      </div>
+
+      <!-- Explore Grid -->
+      <div class="explore-grid" id="exploreGrid">
+        <!-- Item 1 (Featured: spans 2 rows) -->
+        <div class="grid-item featured">
+          <img src="media/kagurabachi.jpg" alt="Explore" />
+          <div class="grid-overlay">
+            <div class="overlay-stat">
+              <i class="fa-solid fa-heart"></i> 12.4k
+            </div>
+            <div class="overlay-stat">
+              <i class="fa-solid fa-comment"></i> 342
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="grid-item">
+          <img src="media/lagbaja.jpg" alt="Explore" />
+          <div class="grid-overlay">
+            <div class="overlay-stat">
+              <i class="fa-solid fa-heart"></i> 8.1k
+            </div>
+            <div class="overlay-stat">
+              <i class="fa-solid fa-comment"></i> 120
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="grid-item">
+          <img src="media/metal obito.jpg" alt="Explore" />
+          <div class="grid-overlay">
+            <div class="overlay-stat">
+              <i class="fa-solid fa-heart"></i> 5.3k
+            </div>
+            <div class="overlay-stat">
+              <i class="fa-solid fa-comment"></i> 89
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="grid-item">
+          <img src="media/INDRA-ASHURA.jpg" alt="Explore" />
+          <div class="grid-overlay">
+            <div class="overlay-stat">
+              <i class="fa-solid fa-heart"></i> 15.2k
+            </div>
+            <div class="overlay-stat">
+              <i class="fa-solid fa-comment"></i> 410
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="grid-item">
+          <img src="media/micah.png" alt="Explore" />
+          <div class="grid-overlay">
+            <div class="overlay-stat">
+              <i class="fa-solid fa-heart"></i> 3.9k
+            </div>
+            <div class="overlay-stat">
+              <i class="fa-solid fa-comment"></i> 56
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 6 -->
+        <div class="grid-item">
+          <img src="media/halo.jpg" alt="Explore" />
+          <div class="grid-overlay">
+            <div class="overlay-stat">
+              <i class="fa-solid fa-heart"></i> 22.1k
+            </div>
+            <div class="overlay-stat">
+              <i class="fa-solid fa-comment"></i> 890
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 7 -->
+        <div class="grid-item">
+          <img src="media/post3.jpg" alt="Explore" />
+          <div class="grid-overlay">
+            <div class="overlay-stat">
+              <i class="fa-solid fa-heart"></i> 9.4k
+            </div>
+            <div class="overlay-stat">
+              <i class="fa-solid fa-comment"></i> 201
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 8 -->
+        <div class="grid-item">
+          <img src="media/wind breaker..jpg" alt="Explore" />
+          <div class="grid-overlay">
+            <div class="overlay-stat">
+              <i class="fa-solid fa-heart"></i> 6.7k
+            </div>
+            <div class="overlay-stat">
+              <i class="fa-solid fa-comment"></i> 112
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 9 -->
+        <div class="grid-item">
+          <img src="media/slam dunk 2.jpg" alt="Explore" />
+          <div class="grid-overlay">
+            <div class="overlay-stat">
+              <i class="fa-solid fa-heart"></i> 18.5k
+            </div>
+            <div class="overlay-stat">
+              <i class="fa-solid fa-comment"></i> 530
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ================= BOTTOM NAV ================= -->
+    <nav class="bottom-nav">
+      <a href="QWEN2.html" class="nav-item">
+        <i class="fa-solid fa-house"></i><span>Home</span>
+      </a>
+      <a href="search.html" class="nav-item active">
+        <i class="fa-solid fa-magnifying-glass"></i><span>Search</span>
+      </a>
+      <a href="create.html" class="nav-item">
+        <i class="fa-regular fa-square-plus"></i><span>Create</span>
+      </a>
+      <a href="notifications.html" class="nav-item">
+        <i class="fa-regular fa-heart"></i><span>Activity</span>
+      </a>
+      <a href="profile.html" class="nav-item">
+        <i class="fa-regular fa-user"></i><span>Profile</span>
+      </a>
+    </nav>
+
+    <!-- ================= SCRIPTS ================= -->
+    <script>
+      // 1. Dark Mode Sync
+      const themeToggle = document.getElementById("themeToggle");
+      const themeIcon = themeToggle?.querySelector("i");
+      const body = document.body;
+
+      const savedTheme = localStorage.getItem("orion-theme");
+      if (savedTheme === "dark") {
+        body.classList.add("dark-mode");
+        themeIcon?.classList.replace("fa-moon", "fa-sun");
+      }
+
+      themeToggle?.addEventListener("click", () => {
+        body.classList.toggle("dark-mode");
+        if (body.classList.contains("dark-mode")) {
+          themeIcon?.classList.replace("fa-moon", "fa-sun");
+          localStorage.setItem("orion-theme", "dark");
+        } else {
+          themeIcon?.classList.replace("fa-sun", "fa-moon");
+          localStorage.setItem("orion-theme", "light");
+        }
+      });
+
+      // 2. Menu Dropdown
+      const menuBtn = document.getElementById("menu-btn");
+      const dropdown = document.getElementById("dropdown");
+      menuBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown.style.display =
+          dropdown.style.display === "block" ? "none" : "block";
+      });
+      window.addEventListener("click", () => {
+        if (dropdown) dropdown.style.display = "none";
+      });
+
+      // 3. Filter Buttons Logic
+      document.querySelectorAll(".explore-filter-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document
+            .querySelectorAll(".explore-filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+
+          // Subtle fade animation to grid when filtering
+          const grid = document.getElementById("exploreGrid");
+          grid.style.opacity = "0.5";
+          setTimeout(() => {
+            grid.style.opacity = "1";
+          }, 200);
+        });
+      });
+
+      // 4. Live Search Filter (Mock Interaction)
+      const searchInput = document.getElementById("exploreSearch");
+      searchInput?.addEventListener("input", function () {
+        const query = this.value.toLowerCase();
+        const items = document.querySelectorAll(".grid-item");
+
+        items.forEach((item) => {
+          // Simulates filtering by randomly hiding/showing items when typing
+          if (query.length > 2) {
+            item.style.display = Math.random() > 0.5 ? "block" : "none";
+          } else {
+            item.style.display = "block";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="media/MINI LOGO 1.jpg" />
+    <title>Profile — Orion</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="PROFILE STYLE.CSS" />
+  </head>
+  <body>
+    <!-- SPLASH SCREEN (Fixed: removed broken .circle wrapper) -->
+    <div id="splash-screen">
+      <div class="splash-content">
+        <img
+          src="media/MINI_LOGO no bg.png"
+          alt="Orion Logo"
+          class="splash-logo"
+        />
+        <div class="loading-ring"></div>
+      </div>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+      <div class="logo">
+        <img src="media/ORION_logo_ GRADIENT no bg.png" alt="orion" />
+      </div>
+
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search Orion..." />
+      </div>
+
+      <div class="header-actions">
+        <a href="ORION ACTIVITY.HTML"> <i class="fa-regular fa-bell"></i></a>
+        <a href="CHAT UI.HTML"><i class="fa-regular fa-paper-plane"></i></a>
+        <div class="menu-wrap" tabindex="0">
+          <i class="fa-solid fa-bars"></i>
+          <div class="dropdown">
+            <a href="profile.html"
+              ><i class="fa-regular fa-user"></i> View profile</a
+            >
+            <a href="setting.html"><i class="fa-solid fa-gear"></i> Settings</a>
+            <a href="#"><i class="fa-regular fa-bookmark"></i> Saved</a>
+            <hr />
+            <!-- FIXED: Added id="logout-btn" here -->
+            <a href="#" id="logout-btn"
+              ><i class="fa-solid fa-arrow-right-from-bracket"></i> Log out</a
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- PROFILE INFO -->
+    <section class="profile-card">
+      <div class="profile-top">
+        <div class="avatar-ring">
+          <div class="avatar"></div>
+        </div>
+
+        <div class="profile-identity">
+          <h1 class="profile-name">Micah</h1>
+          <p class="profile-handle">@djenzo1434</p>
+
+          <div class="profile-stats">
+            <div><strong>24</strong> posts</div>
+            <div><strong>318</strong> followers</div>
+            <div><strong>402</strong> following</div>
+          </div>
+
+          <div class="profile-actions">
+            <button class="btn">Edit profile</button>
+            <button class="btn secondary">Share profile</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="profile-bio">
+        Building <span class="tag">Orion</span> — web dev student in Abuja,
+        learning one layer at a time. Interested in AI, security, and making
+        tech that actually helps people.
+      </p>
+    </section>
+
+    <!-- TABS -->
+    <nav class="tabs">
+      <a href="#" class="tab-link active" data-target="posts-grid">
+        <i class="fa-solid fa-table-cells"></i> Posts
+      </a>
+      <a href="#" class="tab-link" data-target="reels-grid">
+        <i class="fa-solid fa-video"></i> Reels
+      </a>
+      <a href="#" class="tab-link" data-target="saved-grid">
+        <i class="fa-regular fa-bookmark"></i> Saved
+      </a>
+    </nav>
+
+    <!-- POSTS GRID -->
+    <div class="grid tab-content active" id="posts-grid">
+      <div class="tile"><img src="media/draken.jpg" alt="" /></div>
+      <div class="tile"><img src="media/INDRA-ASHURA.jpg" alt="" /></div>
+      <div class="tile"><img src="media/meme 2 naruto.jpg" alt="" /></div>
+      <div class="tile"><img src="media/micah.png" alt="" /></div>
+      <div class="tile"><img src="media/slam dunk 2.jpg" alt="" /></div>
+      <div class="tile"><img src="media/wind breaker..jpg" alt="" /></div>
+    </div>
+
+    <!-- REELS GRID (Empty State) -->
+    <div class="grid tab-content" id="reels-grid">
+      <div class="empty-state">
+        <i class="fa-solid fa-video"></i>
+        <h3>No Reels Yet</h3>
+        <p>When you create or share reels, they will appear here.</p>
+      </div>
+    </div>
+
+    <!-- SAVED GRID (Empty State) -->
+    <div class="grid tab-content" id="saved-grid">
+      <div class="empty-state">
+        <i class="fa-regular fa-bookmark"></i>
+        <h3>No Saved Posts</h3>
+        <p>Save photos and videos that you want to see again.</p>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bottom-nav">
+      <a href="QWEN2.html"><i class="fa-solid fa-house"></i></a>
+      <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
+      <a href="create.html"><i class="fa-regular fa-square-plus"></i></a>
+      <a href="reels.html"><i class="fa-solid fa-video"></i></a>
+      <a href="profile.html" class="active"><i class="fa-solid fa-user"></i></a>
+    </nav>
+
+    <script>
+      // 1. BULLETPROOF SPLASH SCREEN
+      setTimeout(() => {
+        const splash = document.getElementById("splash-screen");
+        if (splash) {
+          splash.classList.add("fade-out");
+          setTimeout(() => {
+            splash.style.display = "none";
+          }, 600);
+        }
+      }, 1500);
+
+      // 2. TAB SWITCHING LOGIC
+      const tabLinks = document.querySelectorAll(".tab-link");
+      const tabContents = document.querySelectorAll(".tab-content");
+
+      tabLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          tabLinks.forEach((l) => l.classList.remove("active"));
+          tabContents.forEach((c) => c.classList.remove("active"));
+          link.classList.add("active");
+
+          const targetId = link.getAttribute("data-target");
+          const targetContent = document.getElementById(targetId);
+          if (targetContent) {
+            targetContent.classList.add("active");
+          }
+        });
+      });
+
+      // 3. LOGOUT LOGIC
+      const logoutBtn = document.getElementById("logout-btn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          localStorage.clear();
+          sessionStorage.clear();
+          window.location.replace("login.html");
+        });
+      }
+
+      // 4. DARK MODE SYNC
+      const body = document.body;
+      const savedTheme = localStorage.getItem("orion-theme");
+      if (savedTheme === "dark") {
+        body.classList.add("dark-mode");
+      }
+    </script>
+  </body>
+</html>

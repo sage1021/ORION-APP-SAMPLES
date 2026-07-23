@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>splash screen</title>
+    <link rel="icon" type="image/x-icon" href="media/MINI LOGO 1.jpg" />
+    <link rel="stylesheet" href="SPLASH UPDATE.CSS" />
+  </head>
+  <body>
+    <!-- ================= SPLASH SCREEN ================= -->
+
+    <div id="splash-screen" style="background: black">
+      <div class="circle">
+        <div class="splash-content">
+          <div class="splash-logo">ORION</div>
+          <div class="splash-tagline">Discover. Create. Connect.</div>
+          <div class="loading-ring"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Splash Screen Logic
+      window.addEventListener("load", () => {
+        // Wait at least 2 seconds so users can see the animation
+        setTimeout(() => {
+          const splash = document.getElementById("splash-screen");
+          if (splash) {
+            splash.classList.add("fade-out");
+            // Remove from DOM after fade transition ends
+            setTimeout(() => {
+              splash.style.display = "none";
+            }, 600);
+          }
+        }, 2000);
+      });
+    </script>
+  </body>
+</html>

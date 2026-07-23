@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="media/MINI LOGO 2.jpg" />
+    <link rel="stylesheet" href="login.CSS" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <title>ORION - Login</title>
+  </head>
+  <body>
+   <!-- ================= SPLASH SCREEN ================= -->
+    <div id="splash-screen">
+      <div class="splash-content">
+        <img
+          src="media/MINI_LOGO no bg.png"
+          alt="Orion Logo"
+          class="splash-logo"
+        />
+        <div class="loading-ring"></div>
+      </div>
+    </div>
+    
+    <nav class="nav">
+      <div class="logo">
+        <div class="logo-div">
+          <h1>
+            <img
+              src="media/orion_logo_ GRADIENT no bg.png"
+              alt="logo"
+              style="width: 120px; height: auto"
+            />
+          </h1>
+        </div>
+      </div>
+      <div class="nav-button">
+        <button class="btn green-btn" id="loginBtn">Login</button>
+        <button class="btn green-btn" id="registerBtn">Sign Up</button>
+      </div>
+    </nav>
+
+    <!--------------------------- form box ------------------------->
+    <div class="wrapper">
+      <div class="form-box">
+        <!-----------login form ---------->
+        <div class="login-container" id="loginForm">
+          <div class="top">
+            <span>
+              Don't Have an account?
+              <a href="#" class="link-register">sign up</a></span
+            >
+          </div>
+          <header>login</header>
+
+          <div class="input-box">
+            <input
+              type="text"
+              class="input-field"
+              placeholder="username or Email"
+            />
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div class="input-box">
+            <input type="password" class="input-field" placeholder="password" />
+            <i class="fa-solid fa-lock"></i>
+          </div>
+
+          <div class="input-box">
+            <input type="submit" class="submit" value="Login" />
+          </div>
+
+          <div class="two-col">
+            <div class="one">
+              <input type="checkbox" id="login-check" />
+              <label for="login-check">Remember me</label>
+            </div>
+
+            <div class="two">
+              <label><a href="#">forgot password?</a></label>
+            </div>
+          </div>
+        </div>
+
+        <!-----------registration form ---------->
+        <div class="register-container" id="registerForm">
+          <div class="top">
+            <span
+              >Already have an account?
+              <a href="#" class="link-login">Login</a></span
+            >
+            <!-- FIXED: was link-login, now correctly targeted -->
+          </div>
+          <header>Sign up</header>
+
+          <div class="input-box">
+            <input type="text" class="input-field" placeholder="Username" />
+            <i class="fa-solid fa-user"></i>
+          </div>
+
+          <div class="input-box">
+            <input type="email" class="input-field" placeholder="Email" />
+            <i class="fa-solid fa-envelope"></i>
+          </div>
+
+          <div class="input-box">
+            <input type="password" class="input-field" placeholder="Password" />
+            <i class="fa-solid fa-lock"></i>
+          </div>
+
+          <div class="input-box">
+            <input type="submit" class="submit" value="Sign up" />
+          </div>
+
+         <div class="two-col">
+          <div class="one">
+            <input type="checkbox" id="reg-check" />
+            <label for="reg-check">I agree to <a href="#">terms & conditions</a></label>
+          </div>
+        </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const loginBtn = document.getElementById("loginBtn");
+      const registerBtn = document.getElementById("registerBtn");
+      const loginForm = document.getElementById("loginForm");
+      const registerForm = document.getElementById("registerForm");
+      const loginLinks = document.querySelectorAll(".link-login");
+      const registerLinks = document.querySelectorAll(".link-register");
+
+      function showLogin(e) {
+        if (e) e.preventDefault();
+        loginForm.style.left = "4px";
+        registerForm.style.right = "-520px";
+      }
+
+      function showRegister(e) {
+        if (e) e.preventDefault();
+        loginForm.style.left = "-520px";
+        registerForm.style.right = "4px";
+      }
+
+      loginBtn.addEventListener("click", showLogin);
+      registerBtn.addEventListener("click", showRegister);
+      loginLinks.forEach((link) => link.addEventListener("click", showLogin));
+      registerLinks.forEach((link) =>
+        link.addEventListener("click", showRegister),
+      );
+    </script>
+
+    <script>
+      // Logout Logic
+      const logoutBtn = document.getElementById("logout-btn");
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function (e) {
+          e.preventDefault(); // Stop the link from jumping to the top of the page
+
+          // 1. Clear any saved user data (Simulating a secure logout)
+          localStorage.clear();
+          sessionStorage.clear();
+
+          // 2. Redirect to the login page
+          // We use 'replace' so the user can't just click the browser's "Back" button to get back in
+          window.location.replace("login.html");
+        });
+      }
+    </script>
+
+    <script>
+      // 1. BULLETPROOF SPLASH SCREEN (Runs even if an image fails to load)
+      setTimeout(() => {
+        const splash = document.getElementById("splash-screen");
+        if (splash) {
+          splash.classList.add("fade-out");
+          setTimeout(() => {
+            splash.style.display = "none";
+          }, 600);
+        }
+      }, 1500); // Disappears after 1.5 seconds
+      </script>
+  </body>
+</html>

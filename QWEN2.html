@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="media/MINI LOGO 1.jpg" />
+    <link rel="stylesheet" href="Qwen.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <title>ORION - Home</title>
+  </head>
+  <body>
+    <!-- ================= SPLASH SCREEN ================= -->
+    <div id="splash-screen">
+      <div class="splash-content">
+        <img
+          src="media/MINI_LOGO no bg.png"
+          alt="Orion Logo"
+          class="splash-logo"
+        />
+        <div class="loading-ring"></div>
+      </div>
+    </div>
+
+    <!-- ================= HEADER ================= -->
+    <header class="main-header">
+      <div class="container header-container">
+        <div class="logo-div">
+          <img
+            src="media/ORION_logo_ GRADIENT no bg.png"
+            alt="ORION Logo"
+            class="logo"
+          />
+        </div>
+        <div class="search-bar">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" placeholder="Search Orion..." />
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" id="openChatBtn">
+            <i class="fa-regular fa-paper-plane"></i>
+          </button>
+          <button class="icon-btn" id="openActivityBtn">
+            <i class="fa-regular fa-heart"></i>
+          </button>
+          <button
+            class="icon-btn theme-toggle"
+            id="themeToggle"
+            title="Toggle Dark Mode"
+          >
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <div class="menu-div">
+            <button id="menu-btn" class="menu-btn">
+              <img src="media/HIM.jpeg" alt="Menu" class="menu-avatar" />
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <ul id="dropdown">
+              <li>
+                <a href="profile(1).html"
+                  ><i class="fa-regular fa-user"></i> Profile</a
+                >
+              </li>
+              <li>
+                <a href="dashboard.html"
+                  ><i class="fa-solid fa-chart-line"></i> Dashboard</a
+                >
+              </li>
+              <li>
+                <a href="setting.html"
+                  ><i class="fa-solid fa-gear"></i> Settings</a
+                >
+              </li>
+              <li class="divider"></li>
+              <li>
+                <a href="login.html"
+                  ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container main-content">
+      <!-- ================= FEATURED / EDITORIAL ================= -->
+      <section class="featured-card">
+        <div class="featured-label">
+          <i class="fa-solid fa-fire"></i> Featured Today
+        </div>
+        <h2 class="featured-title">
+          The Rise of AI-Generated Art: What Creators Need to Know
+        </h2>
+        <p class="featured-desc">
+          From Midjourney to Stable Diffusion, the creative landscape is
+          shifting fast. Here's how top artists are adapting.
+        </p>
+        <div class="featured-meta">
+          <img src="media/post 1.jpg" alt="Author" />
+          <span><b>Joshua</b> · 5 min read · 12.4k views</span>
+        </div>
+      </section>
+
+      <!-- ================= STORIES ================= -->
+      
+        <div class="story-div">
+          <div class="story" id="myStory" data-story-type="none">
+            <div class="story-circle add-story" id="myStoryCircle">
+              <div class="story-inner">
+                <img src="media/obito.gif" alt="You" id="myStoryImg" />
+              </div>
+              <span class="add-badge" id="myStoryBadge"
+                ><i class="fa-solid fa-plus"></i
+              ></span>
+            </div>
+            <p>You</p>
+            <input
+              type="file"
+              id="myStoryInput"
+              accept="image/*, video/*"
+              hidden
+            />
+          </div>
+          <div class="story" data-user-id="user_alex_01" data-story-video="media/reel.mp4">
+  <div class="story-circle online">
+    <div class="story-inner"><img src="media/OLD SCHOOL.png" alt="Alex" /></div>
+    <span class="status-dot online-status"></span>
+  </div>
+  <p>Alex</p>
+</div>
+
+<div class="story" data-user-id="user_sarah_02" data-story-img="media/halo.jpg">
+  <div class="story-circle online">
+    <div class="story-inner"><img src="media/halo.jpg" alt="Sarah" /></div>
+    <span class="status-dot online-status"></span>
+  </div>
+  <p>Sarah</p>
+</div>
+          <div class="story" data-story-img="media/kagurabachi.jpg">
+            <div class="story-circle away">
+              <div class="story-inner">
+                <img src="media/kagurabachi.jpg" alt="John" />
+              </div>
+              <span class="status-dot away-status"></span>
+            </div>
+            <p>John</p>
+          </div>
+          <div class="story" data-story-img="media/halo.jpg">
+            <div class="story-circle busy">
+              <div class="story-inner">
+                <img src="media/halo.jpg" alt="Emma" />
+              </div>
+              <span class="status-dot busy-status"></span>
+            </div>
+            <p>Emma</p>
+          </div>
+          <div class="story" data-story-img="media/HIM.jpeg">
+            <div class="story-circle offline">
+              <div class="story-inner">
+                <img src="media/HIM.jpeg" alt="Mike" />
+              </div>
+              <span class="status-dot offline-status"></span>
+            </div>
+            <p>Mike</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PEOPLE YOU MAY KNOW ================= -->
+      <section class="suggested-section">
+        <div class="section-header">
+          <h3 class="section-title">
+            <i class="fa-solid fa-user-plus"></i> People You May Know
+          </h3>
+          <a href="#" class="see-all"
+            >See all <i class="fa-solid fa-arrow-right"></i
+          ></a>
+        </div>
+        <button class="suggested-nav suggested-nav-left" id="suggestedLeft">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="suggested-nav suggested-nav-right" id="suggestedRight">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <div class="suggested-scroll" id="suggestedScroll">
+          <div class="suggested-card">
+            <button class="remove-suggest">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img src="media/post 1.jpg" class="suggested-avatar" alt="User" />
+            <div class="suggested-name">Daniel Kim</div>
+            <div class="suggested-mutual">
+              <i class="fa-solid fa-user-group"></i> 12 mutual friends
+            </div>
+            <button class="follow-btn">Follow</button>
+          </div>
+          <div class="suggested-card">
+            <button class="remove-suggest">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img src="media/halo.jpg" class="suggested-avatar" alt="User" />
+            <div class="suggested-name">Priya Sharma</div>
+            <div class="suggested-mutual">
+              <i class="fa-solid fa-user-group"></i> 8 mutual friends
+            </div>
+            <button class="follow-btn">Follow</button>
+          </div>
+          <div class="suggested-card">
+            <button class="remove-suggest">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img src="media/draken.jpg" class="suggested-avatar" alt="User" />
+            <div class="suggested-name">Marcus Lee</div>
+            <div class="suggested-mutual">
+              <i class="fa-solid fa-user-group"></i> 5 mutual friends
+            </div>
+            <button class="follow-btn">Follow</button>
+          </div>
+          <div class="suggested-card">
+            <button class="remove-suggest">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img src="media/lagbaja.jpg" class="suggested-avatar" alt="User" />
+            <div class="suggested-name">Aisha Johnson</div>
+            <div class="suggested-mutual">
+              <i class="fa-solid fa-user-group"></i> 21 mutual friends
+            </div>
+            <button class="follow-btn">Follow</button>
+          </div>
+          <div class="suggested-card">
+            <button class="remove-suggest">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img
+              src="media/wind breaker..jpg"
+              class="suggested-avatar"
+              alt="User"
+            />
+            <div class="suggested-name">Lucas Martin</div>
+            <div class="suggested-mutual">
+              <i class="fa-solid fa-user-group"></i> 3 mutual friends
+            </div>
+            <button class="follow-btn">Follow</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TRENDING ================= -->
+      <section class="trending-section">
+        <div class="section-header">
+          <h3 class="section-title">
+            <i class="fa-solid fa-fire"></i> Trending Now
+          </h3>
+        </div>
+        <div class="trending-scroll">
+          <div class="trend-pill">
+            <span class="trend-tag">#TechNews</span
+            ><span class="trend-count">24.5k posts</span>
+          </div>
+          <div class="trend-pill">
+            <span class="trend-tag">#AnimeSeason</span
+            ><span class="trend-count">18.2k posts</span>
+          </div>
+          <div class="trend-pill">
+            <span class="trend-tag">#StreetPhotography</span
+            ><span class="trend-count">12.8k posts</span>
+          </div>
+          <div class="trend-pill">
+            <span class="trend-tag">#Gaming</span
+            ><span class="trend-count">9.4k posts</span>
+          </div>
+          <div class="trend-pill">
+            <span class="trend-tag">#Foodie</span
+            ><span class="trend-count">7.1k posts</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= FEED ================= -->
+      <section class="feed-section">
+        <div class="section-header">
+          <h3 class="section-title">Your Feed</h3>
+          <div class="feed-filters">
+            <button class="filter-btn active">For You</button>
+            <button class="filter-btn">Following</button>
+            <button class="filter-btn">Trending</button>
+          </div>
+        </div>
+
+        <div class="post">
+          <div class="post-header">
+            <div class="profile">
+              <div class="avatar">
+                <img src="media/post 1.jpg" alt="Joshua" />
+              </div>
+              <div class="profile-info">
+                <h4>
+                  Joshua
+                  <span class="verified"
+                    ><i class="fa-solid fa-circle-check"></i
+                  ></span>
+                </h4>
+                <p class="location">
+                  <i class="fa-solid fa-location-dot"></i> Tokyo, Japan
+                </p>
+              </div>
+            </div>
+            <button class="post-menu">
+              <i class="fa-solid fa-ellipsis"></i>
+            </button>
+          </div>
+          <div class="post-image">
+            <img src="media/kagurabachi.jpg" alt="Post by Joshua" />
+          </div>
+          <div class="post-actions">
+            <div class="action-left">
+              <button class="action-btn like-btn">
+                <i class="fa-regular fa-heart"></i>
+              </button>
+              <button class="action-btn comment-btn">
+                <i class="fa-regular fa-comment"></i>
+              </button>
+              <button class="action-btn">
+                <i class="fa-regular fa-paper-plane"></i>
+              </button>
+              <button class="action-btn reaction-btn">
+                <i class="fa-regular fa-face-smile"></i>
+              </button>
+            </div>
+            <button class="action-btn bookmark-btn">
+              <i class="fa-regular fa-bookmark"></i>
+            </button>
+          </div>
+          <div class="post-info">
+            <p class="likes"><b>1,245 likes</b></p>
+            <p class="caption">
+              <b>Joshua</b> The game in Japan was amazing and I want to share
+              some photos ✨
+            </p>
+            <p class="comments-preview">View all 48 comments</p>
+            <p class="timestamp">2 hours ago</p>
+          </div>
+          <div class="reaction-picker">
+            <span class="reaction" data-reaction="❤️">❤️</span>
+            <span class="reaction" data-reaction="🔥">🔥</span>
+            <span class="reaction" data-reaction="😂">😂</span>
+            <span class="reaction" data-reaction="😮">😮</span>
+            <span class="reaction" data-reaction="🎉">🎉</span>
+            <span class="reaction" data-reaction="💯">💯</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="modal-overlay" id="createModal">
+      <div class="create-modal refined">
+        <div class="create-header">
+          <button class="close-modal" id="closeCreateBtn"><i class="fa-solid fa-xmark"></i></button>
+          <h2>Create Post</h2>
+          <button class="share-btn-modal" id="sharePostBtn" disabled>Share</button>
+        </div>
+        
+        <div class="create-body">
+          <div class="create-user-info">
+            <img src="media/HIM.jpeg" alt="You" class="create-avatar" />
+            <span class="create-username">Micah</span>
+          </div>
+
+          <textarea id="captionInput" placeholder="What's on your mind, Micah?" maxlength="500"></textarea>
+          
+          <div class="upload-area" id="uploadArea">
+            <i class="fa-regular fa-image"></i>
+            <p>Add a photo</p>
+            <input type="file" id="fileInput" accept="image/*" hidden />
+          </div>
+
+          <div id="previewContainer" class="preview-container" style="display: none;">
+            <img id="imagePreview" />
+            <button class="remove-img-btn" id="removeImgBtn"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= BOTTOM NAV ================= -->
+    <nav class="bottom-nav">
+      <a href="QWEN2.html" class="nav-item active"
+        ><i class="fa-solid fa-house"></i><span>Home</span></a
+      >
+      <a href="ORION EXPLORE.HTML" class="nav-item"
+        ><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></a
+      >
+      <a href="#" class="nav-item create-btn" id="openCreateBtn"
+        ><i class="fa-regular fa-square-plus"></i><span>Create</span></a
+      >
+      <a href="ORION ACTIVITY.HTML" class="nav-item"
+        ><i class="fa-regular fa-heart"></i><span>Activity</span></a
+      >
+      <a href="profile(1).html" class="nav-item"
+        ><i class="fa-regular fa-user"></i><span>Profile</span></a
+      >
+    </nav>
+
+    <!-- ================= CHAT MODAL ================= -->
+    <div class="side-modal-overlay" id="chatModal">
+      <div class="side-modal-content chat-modal-content">
+        <div
+          id="chatListView"
+          style="display: flex; flex-direction: column; height: 100%"
+        >
+          <div class="modal-header">
+            <h3>Messages</h3>
+            <button class="close-side-modal" id="closeChatBtn">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div class="chat-folders">
+            <button class="folder-btn active" data-folder="all">All</button>
+            <button class="folder-btn" data-folder="unread">
+              Unread <span class="folder-badge">2</span>
+            </button>
+            <button class="folder-btn" data-folder="groups">Groups</button>
+            <button class="folder-btn" data-folder="channels">Channels</button>
+          </div>
+          <div class="chat-list">
+            <div
+              class="chat-item"
+              onclick="openActiveChat('Alex Rivera', 'media/OLD SCHOOL.png')"
+            >
+              <img src="media/OLD SCHOOL.png" class="chat-avatar" alt="Alex" />
+              <div class="chat-info">
+                <div class="chat-header-row">
+                  <span class="chat-name">Alex Rivera</span>
+                  <span class="chat-time">10:42 AM</span>
+                </div>
+                <div class="chat-preview-row">
+                  <span class="chat-preview"></span>
+                  <span class="unread-badge"></span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="chat-item"
+              onclick="openActiveChat('Sarah Chen', 'media/halo.jpg')"
+            >
+              <img src="media/halo.jpg" class="chat-avatar" alt="Sarah" />
+              <div class="chat-info">
+                <div class="chat-header-row">
+                  <span class="chat-name">Sarah Chen</span>
+                  <span class="chat-time">Yesterday</span>
+                </div>
+                <div class="chat-preview-row">
+                  <span class="chat-preview"></span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="chat-item"
+              onclick="openActiveChat('John Martinez', 'media/kagurabachi.jpg')"
+            >
+              <img src="media/kagurabachi.jpg" class="chat-avatar" alt="John" />
+              <div class="chat-info">
+                <div class="chat-header-row">
+                  <span class="chat-name">John Martinez</span>
+                  <span class="chat-time">Mon</span>
+                </div>
+                <div class="chat-preview-row">
+                  <span class="chat-preview"
+                    ><i class="fa-solid fa-image"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="activeChatView"
+          style="display: none; flex-direction: column; height: 100%"
+        >
+          <div class="modal-header chat-header-back">
+            <button
+              class="icon-btn"
+              id="backToChatListBtn"
+              style="padding: 0; margin-right: 10px"
+            >
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <img
+              src=""
+              id="activeChatAvatar"
+              class="chat-avatar-small"
+              alt="User"
+            />
+            <div class="chat-user-details">
+              <span id="activeChatName" class="chat-name">User</span>
+              <span class="chat-status">Active now</span>
+            </div>
+          </div>
+          <div class="encryption-badge">
+            <i class="fa-solid fa-lock"></i>
+            <span>End-to-end encrypted · Messages disappear in 24h</span>
+          </div>
+          <div class="messages-area" id="messagesArea"></div>
+          <div class="chat-input-area">
+            <input
+              type="text"
+              id="chatMessageInput"
+              placeholder="Type a message..."
+            />
+            <button class="icon-btn send-btn" id="sendChatMessageBtn">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SPLASH SCREEN (Regular Script - Loads Immediately) ================= -->
+    <script>
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          const splash = document.getElementById("splash-screen");
+          if (splash) {
+            splash.classList.add("fade-out");
+            setTimeout(() => {
+              splash.style.display = "none";
+            }, 600);
+          }
+        }, 1500);
+      });
+    </script>
+
+    <!-- ================= FIREBASE & APP SCRIPTS ================= -->
+    <!-- ================= FIREBASE & APP SCRIPTS ================= -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, where
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      // 🔥 NEW: Import Firebase Storage
+      import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyD0e21P_9lIin0GB1VGdUHAN4ZrkeEMxPI",
+        authDomain: "orion--project.firebaseapp.com",
+        projectId: "orion--project",
+        storageBucket: "orion--project.firebasestorage.app",
+        messagingSenderId: "91554323371",
+        appId: "1:91554323371:web:5b5ba0c66b6d767ed6d0ee",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const storage = getStorage(app); // 🔥 Initialize Storage
+
+      const currentUser = { uid: "user_micah_123", name: "Micah", avatar: "media/HIM.jpeg" };
+
+      // ================= REAL-TIME POSTS =================
+      const feedSection = document.querySelector(".feed-section");
+
+      function loadRealTimePosts() {
+        const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
+        onSnapshot(q, (snapshot) => {
+          const oldPosts = feedSection.querySelectorAll(".post");
+          oldPosts.forEach(post => post.remove());
+          snapshot.forEach((docSnapshot) => {
+            feedSection.insertAdjacentHTML("beforeend", createPostHTML(docSnapshot.data(), docSnapshot.id));
+          });
+        });
+      }
+
+      function createPostHTML(post, postId) {
+        const timeAgo = post.timestamp ? getTimeAgo(post.timestamp.toDate()) : "Just now";
+        const likesCount = post.likes !== undefined ? post.likes : 0;
+        return `
+          <div class="post" data-post-id="${postId}">
+            <div class="post-header">
+              <div class="profile">
+                <div class="avatar"><img src="${post.userAvatar}" alt="${post.userName}" /></div>
+                <div class="profile-info"><h4>${post.userName}</h4><p class="timestamp">${timeAgo}</p></div>
+              </div>
+              <button class="post-menu"><i class="fa-solid fa-ellipsis"></i></button>
+            </div>
+            ${post.imageUrl ? `<div class="post-image"><img src="${post.imageUrl}" alt="Post" /></div>` : ""}
+            <div class="post-actions">
+              <div class="action-left">
+                <button class="action-btn like-btn"><i class="fa-regular fa-heart"></i></button>
+                <button class="action-btn comment-btn"><i class="fa-regular fa-comment"></i></button>
+                <button class="action-btn share-btn"><i class="fa-regular fa-paper-plane"></i></button>
+              </div>
+              <button class="action-btn bookmark-btn"><i class="fa-regular fa-bookmark"></i></button>
+            </div>
+            <div class="post-info">
+              <p class="likes"><b>${likesCount} likes</b></p>
+              <p class="caption"><b>${post.userName}</b> ${post.text}</p>
+            </div>
+          </div>`;
+      }
+
+      function getTimeAgo(date) {
+        const seconds = Math.floor((new Date() - date) / 1000);
+        if (seconds < 60) return "Just now";
+        const minutes = Math.floor(seconds / 60);
+        if (minutes < 60) return `${minutes}m ago`;
+        const hours = Math.floor(minutes / 60);
+        if (hours < 24) return `${hours}h ago`;
+        return `${Math.floor(hours / 24)}d ago`;
+      }
+
+      feedSection.addEventListener("click", async (e) => {
+        const likeBtn = e.target.closest(".like-btn");
+        if (likeBtn) {
+          const postElement = likeBtn.closest(".post");
+          const postId = postElement.getAttribute("data-post-id");
+          const icon = likeBtn.querySelector("i");
+          const likesElement = postElement.querySelector(".likes b");
+          let currentLikes = parseInt(likesElement.textContent.replace(" likes", "").replace(/,/g, "")) || 0;
+          
+          if (icon.classList.contains("fa-regular")) {
+            icon.classList.replace("fa-regular", "fa-solid");
+            likeBtn.style.color = "#ef4444";
+            currentLikes++;
+          } else {
+            icon.classList.replace("fa-solid", "fa-regular");
+            likeBtn.style.color = "";
+            currentLikes = Math.max(0, currentLikes - 1);
+          }
+          likesElement.textContent = currentLikes.toLocaleString() + " likes";
+          try { await updateDoc(doc(db, "posts", postId), { likes: currentLikes }); } catch (err) { console.error(err); }
+          return;
+        }
+
+        const bookmarkBtn = e.target.closest(".bookmark-btn");
+        if (bookmarkBtn) {
+          const icon = bookmarkBtn.querySelector("i");
+          icon.classList.toggle("fa-regular");
+          icon.classList.toggle("fa-solid");
+          return;
+        }
+
+        const shareBtn = e.target.closest(".share-btn");
+        if (shareBtn) {
+          alert("Post link copied to clipboard! 📋");
+          return;
+        }
+      });
+
+      // ================= REFINED CREATE POST MODAL =================
+      const createModal = document.getElementById("createModal");
+      const openCreateBtn = document.getElementById("openCreateBtn");
+      const closeCreateBtn = document.getElementById("closeCreateBtn");
+      const uploadArea = document.getElementById("uploadArea");
+      const fileInput = document.getElementById("fileInput");
+      const sharePostBtn = document.getElementById("sharePostBtn");
+      const captionInput = document.getElementById("captionInput");
+      const previewContainer = document.getElementById("previewContainer");
+      const imagePreview = document.getElementById("imagePreview");
+      const removeImgBtn = document.getElementById("removeImgBtn");
+
+      function updateShareButtonState() {
+        const hasText = captionInput.value.trim().length > 0;
+        const hasImage = fileInput.files.length > 0;
+        sharePostBtn.disabled = !(hasText || hasImage);
+      }
+
+      openCreateBtn?.addEventListener("click", (e) => { e.preventDefault(); createModal?.classList.add("active"); });
+      closeCreateBtn?.addEventListener("click", () => { createModal?.classList.remove("active"); resetCreateForm(); });
+      createModal?.addEventListener("click", (e) => { if (e.target === createModal) { createModal.classList.remove("active"); resetCreateForm(); } });
+      
+      uploadArea?.addEventListener("click", () => fileInput?.click());
+      captionInput?.addEventListener("input", updateShareButtonState);
+
+      fileInput?.addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        if (file) {
+          const fileURL = URL.createObjectURL(file);
+          imagePreview.src = fileURL;
+          previewContainer.style.display = "block";
+          uploadArea.style.display = "none"; // Hide upload area when image is selected
+          updateShareButtonState();
+        }
+      });
+
+      removeImgBtn?.addEventListener("click", () => {
+        fileInput.value = "";
+        imagePreview.src = "";
+        previewContainer.style.display = "none";
+        uploadArea.style.display = "flex";
+        updateShareButtonState();
+      });
+
+      sharePostBtn?.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const text = captionInput.value.trim();
+        let finalImageUrl = "";
+
+        // 🔥 1. Upload Image to Firebase Storage (if an image was selected)
+        if (fileInput.files[0]) {
+          const file = fileInput.files[0];
+          const storageRef = ref(storage, `posts/${Date.now()}_${file.name}`);
+          
+          sharePostBtn.innerText = "Uploading...";
+          sharePostBtn.disabled = true;
+          
+          try {
+            const snapshot = await uploadBytes(storageRef, file);
+            finalImageUrl = await getDownloadURL(snapshot.ref); // Get permanent cloud URL
+          } catch (error) {
+            console.error("Upload failed:", error);
+            alert("Image upload failed.");
+            sharePostBtn.innerText = "Share";
+            updateShareButtonState();
+            return;
+          }
+        }
+
+        // 🔥 2. Save Post to Firestore with the permanent URL
+        sharePostBtn.innerText = "Posting...";
+        try {
+          await addDoc(collection(db, "posts"), {
+            userId: currentUser.uid,
+            userName: currentUser.name,
+            userAvatar: currentUser.avatar,
+            text: text,
+            imageUrl: finalImageUrl,
+            timestamp: serverTimestamp(),
+            likes: 0,
+          });
+          createModal.classList.remove("active");
+          resetCreateForm();
+        } catch (error) {
+          console.error("Error creating post:", error);
+          alert("Failed to create post.");
+        } finally {
+          sharePostBtn.innerText = "Share";
+        }
+      });
+
+      function resetCreateForm() {
+        captionInput.value = "";
+        fileInput.value = "";
+        imagePreview.src = "";
+        previewContainer.style.display = "none";
+        uploadArea.style.display = "flex";
+        sharePostBtn.innerText = "Share";
+        sharePostBtn.disabled = true;
+      }
+
+      // ================= REAL-TIME USER STATUS =================
+      function loadRealTimeStatus() {
+        onSnapshot(collection(db, "users"), (snapshot) => {
+          snapshot.forEach((doc) => {
+            const userData = doc.data();
+            const userId = doc.id;
+            const storyElement = document.querySelector(`.story[data-user-id="${userId}"]`);
+            if (storyElement) {
+              const statusDot = storyElement.querySelector(".status-dot");
+              if (statusDot) {
+                statusDot.className = "status-dot";
+                if (userData.status === "online") statusDot.classList.add("online-status");
+                else if (userData.status === "away") statusDot.classList.add("away-status");
+                else if (userData.status === "busy") statusDot.classList.add("busy-status");
+                else statusDot.classList.add("offline-status");
+              }
+            }
+          });
+        });
+      }
+
+      // ================= CHAT LOGIC =================
+      const chatListView = document.getElementById("chatListView");
+      const activeChatView = document.getElementById("activeChatView");
+      const messagesArea = document.getElementById("messagesArea");
+      const chatMessageInput = document.getElementById("chatMessageInput");
+      const chatRooms = { "Alex Rivera": "room_alex_01", "Sarah Chen": "room_sarah_02", "John Martinez": "room_john_03" };
+      let currentChatId = null;
+      let unsubscribe = null;
+
+      window.openActiveChat = function (name, avatar) {
+        document.getElementById("activeChatName").innerText = name;
+        document.getElementById("activeChatAvatar").src = avatar;
+        chatListView.style.display = "none";
+        activeChatView.style.display = "flex";
+        currentChatId = chatRooms[name] || "room_default";
+        listenToMessages();
+      };
+
+      document.getElementById("backToChatListBtn")?.addEventListener("click", resetChatView);
+      function resetChatView() {
+        activeChatView.style.display = "none";
+        chatListView.style.display = "flex";
+        currentChatId = null;
+        if (unsubscribe) unsubscribe();
+      }
+
+      function listenToMessages() {
+        messagesArea.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--secondary);">Loading messages...</p>';
+        if (unsubscribe) unsubscribe();
+        const q = query(collection(db, "messages"), where("chatRoomId", "==", currentChatId), orderBy("timestamp", "asc"));
+        unsubscribe = onSnapshot(q, (snapshot) => {
+          messagesArea.innerHTML = "";
+          if (snapshot.empty) { messagesArea.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--secondary);">No messages yet. Say hello! 👋</p>'; return; }
+          snapshot.forEach((doc) => {
+            const msg = doc.data();
+            const isMe = msg.senderId === currentUser.uid;
+            const time = msg.timestamp ? msg.timestamp.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "...";
+            messagesArea.insertAdjacentHTML("beforeend", `<div class="message ${isMe ? "sent" : "received"}"><p>${msg.text}</p><span class="msg-time">${time} ${isMe ? '<i class="fa-solid fa-check-double msg-ticks read"></i>' : ""}</span></div>`);
+          });
+          messagesArea.scrollTop = messagesArea.scrollHeight;
+        });
+      }
+
+      async function sendMessage() {
+        const text = chatMessageInput.value.trim();
+        if (!text || !currentChatId) return;
+        chatMessageInput.value = "";
+        try { await addDoc(collection(db, "messages"), { chatRoomId: currentChatId, senderId: currentUser.uid, text: text, timestamp: serverTimestamp() }); } 
+        catch (error) { console.error("Error sending message: ", error); }
+      }
+
+      document.getElementById("sendChatMessageBtn")?.addEventListener("click", sendMessage);
+      chatMessageInput?.addEventListener("keypress", (e) => { if (e.key === "Enter") sendMessage(); });
+
+      // ================= MODAL & THEME TOGGLES =================
+      const chatModal = document.getElementById("chatModal");
+      document.getElementById("openChatBtn")?.addEventListener("click", () => chatModal?.classList.add("active"));
+      document.getElementById("closeChatBtn")?.addEventListener("click", () => { chatModal?.classList.remove("active"); resetChatView(); });
+      chatModal?.addEventListener("click", (e) => { if (e.target === chatModal) { chatModal.classList.remove("active"); resetChatView(); } });
+
+      const themeToggle = document.getElementById("themeToggle");
+      const themeIcon = themeToggle?.querySelector("i");
+      const body = document.body;
+      const savedTheme = localStorage.getItem("orion-theme");
+      if (savedTheme === "dark") { body.classList.add("dark-mode"); themeIcon?.classList.replace("fa-moon", "fa-sun"); }
+      themeToggle?.addEventListener("click", () => {
+        body.classList.toggle("dark-mode");
+        if (body.classList.contains("dark-mode")) { themeIcon?.classList.replace("fa-moon", "fa-sun"); localStorage.setItem("orion-theme", "dark"); }
+        else { themeIcon?.classList.replace("fa-sun", "fa-moon"); localStorage.setItem("orion-theme", "light"); }
+      });
+
+      // ================= INITIALIZE =================
+      loadRealTimePosts();
+      loadRealTimeStatus(); 
+    </script>  
+      </body>
+</html>
