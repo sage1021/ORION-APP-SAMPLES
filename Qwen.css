@@ -668,141 +668,6 @@ body {
   }
 }
 
-/* <!-- ================= REFINED CREATE MODAL ================= -->
-     */
-
-.create-modal.refined {
-  background: var(--surface);
-  width: 90%;
-  max-width: 500px;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  max-height: 90vh;
-}
-.create-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px 20px;
-  border-bottom: 1px solid var(--border);
-}
-.create-header h2 {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text);
-  margin: 0;
-}
-.create-header .close-modal {
-  background: none;
-  border: none;
-  font-size: 20px;
-  color: var(--secondary);
-  cursor: pointer;
-}
-.create-header .share-btn-modal {
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.create-header .share-btn-modal:disabled {
-  background: var(--border);
-  color: var(--secondary);
-  cursor: not-allowed;
-}
-.create-body {
-  padding: 20px;
-  overflow-y: auto;
-}
-.create-user-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 15px;
-}
-.create-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-.create-username {
-  font-weight: 600;
-  color: var(--text);
-  font-size: 15px;
-}
-.create-body textarea {
-  width: 100%;
-  border: none;
-  outline: none;
-  font-size: 16px;
-  color: var(--text);
-  background: transparent;
-  resize: none;
-  min-height: 100px;
-  font-family: inherit;
-  margin-bottom: 20px;
-}
-.create-body textarea::placeholder {
-  color: var(--secondary);
-}
-.upload-area {
-  border: 2px dashed var(--border);
-  border-radius: 12px;
-  padding: 30px;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.2s;
-  color: var(--secondary);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.upload-area:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: rgba(139, 69, 19, 0.05);
-}
-.upload-area i {
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-.preview-container {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  margin-top: 15px;
-}
-.preview-container img {
-  width: 100%;
-  max-height: 300px;
-  object-fit: cover;
-  display: block;
-}
-.remove-img-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-}
-
 /* <!-- ================= STORY VIEWER MODAL ================= --> */
 
 .story-viewer {
@@ -1101,58 +966,6 @@ body {
 }
 .account-btn.add-account:hover {
   background: rgba(139, 69, 19, 0.05);
-}
-
-/* Create Post */
-.create-card {
-  background: var(--surface);
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px var(--shadow);
-  text-align: center;
-}
-.upload-area {
-  border: 2px dashed var(--border);
-  border-radius: 12px;
-  padding: 40px 20px;
-  margin-bottom: 20px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.upload-area:hover {
-  border-color: var(--primary);
-  background: #fafafa;
-}
-.upload-area i {
-  font-size: 40px;
-  color: var(--secondary);
-  margin-bottom: 10px;
-  display: block;
-}
-.create-card textarea {
-  width: 100%;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 15px;
-  font-family: inherit;
-  resize: none;
-  outline: none;
-  margin-bottom: 20px;
-  height: 100px;
-}
-.post-btn {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 25px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 16px;
-}
-.post-btn:hover {
-  background: #6f3810;
 }
 
 /* Notifications */
@@ -3585,4 +3398,50 @@ body.dark-mode .date-filter {
   background: #292524;
   border-color: #292524;
   color: var(--text);
+}
+
+/* ================= CREATE MODAL OVERLAY (MISSING!) ================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.active {
+  display: flex;
+}
+
+/* ================= REMOVE OLD CREATE CARD CONFLICTS ================= */
+/* The old .create-card styles conflict with the new .create-modal.refined */
+/* Override them to prevent visual bugs */
+.create-modal.refined .upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+  color: var(--secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0; /* Override old .create-card .upload-area margin */
+}
+.create-modal.refined .upload-area:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(139, 69, 19, 0.05);
+}
+.create-modal.refined .upload-area i {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+/* Dark mode for the overlay */
+body.dark-mode .modal-overlay {
+  background: rgba(0, 0, 0, 0.8);
 }

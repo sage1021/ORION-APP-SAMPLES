@@ -10,6 +10,143 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <title>ORION - Home</title>
+
+    <!-- ================= REFINED CREATE MODAL CSS ================= -->
+    <style>
+      .create-modal.refined {
+        background: var(--surface);
+        width: 90%;
+        max-width: 500px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        max-height: 90vh;
+      }
+      .create-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--border);
+      }
+      .create-header h2 {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0;
+      }
+      .create-header .close-modal {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: var(--secondary);
+        cursor: pointer;
+      }
+      .create-header .share-btn-modal {
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .create-header .share-btn-modal:disabled {
+        background: var(--border);
+        color: var(--secondary);
+        cursor: not-allowed;
+      }
+      .create-body {
+        padding: 20px;
+        overflow-y: auto;
+      }
+      .create-user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+      }
+      .create-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      .create-username {
+        font-weight: 600;
+        color: var(--text);
+        font-size: 15px;
+      }
+      .create-body textarea {
+        width: 100%;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        color: var(--text);
+        background: transparent;
+        resize: none;
+        min-height: 100px;
+        font-family: inherit;
+        margin-bottom: 20px;
+      }
+      .create-body textarea::placeholder {
+        color: var(--secondary);
+      }
+      .upload-area {
+        border: 2px dashed var(--border);
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.2s;
+        color: var(--secondary);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .upload-area:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: rgba(139, 69, 19, 0.05);
+      }
+      .upload-area i {
+        font-size: 32px;
+        margin-bottom: 10px;
+      }
+      .preview-container {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 15px;
+      }
+      .preview-container img,
+      .preview-container video {
+        width: 100%;
+        max-height: 300px;
+        object-fit: cover;
+        display: block;
+        border-radius: 12px;
+      }
+      .remove-img-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      }
+    </style>
   </head>
   <body>
     <!-- ================= SPLASH SCREEN ================= -->
@@ -105,7 +242,6 @@
       </section>
 
       <!-- ================= STORIES ================= -->
-      
         <div class="story-div">
           <div class="story" id="myStory" data-story-type="none">
             <div class="story-circle add-story" id="myStoryCircle">
@@ -124,21 +260,32 @@
               hidden
             />
           </div>
-          <div class="story" data-user-id="user_alex_01" data-story-video="media/reel.mp4">
-  <div class="story-circle online">
-    <div class="story-inner"><img src="media/OLD SCHOOL.png" alt="Alex" /></div>
-    <span class="status-dot online-status"></span>
-  </div>
-  <p>Alex</p>
-</div>
-
-<div class="story" data-user-id="user_sarah_02" data-story-img="media/halo.jpg">
-  <div class="story-circle online">
-    <div class="story-inner"><img src="media/halo.jpg" alt="Sarah" /></div>
-    <span class="status-dot online-status"></span>
-  </div>
-  <p>Sarah</p>
-</div>
+          <div
+            class="story"
+            data-user-id="user_alex_01"
+            data-story-video="media/reel.mp4"
+          >
+            <div class="story-circle online">
+              <div class="story-inner">
+                <img src="media/OLD SCHOOL.png" alt="Alex" />
+              </div>
+              <span class="status-dot online-status"></span>
+            </div>
+            <p>Alex</p>
+          </div>
+          <div
+            class="story"
+            data-user-id="user_sarah_02"
+            data-story-img="media/halo.jpg"
+          >
+            <div class="story-circle online">
+              <div class="story-inner">
+                <img src="media/halo.jpg" alt="Sarah" />
+              </div>
+              <span class="status-dot online-status"></span>
+            </div>
+            <p>Sarah</p>
+          </div>
           <div class="story" data-story-img="media/kagurabachi.jpg">
             <div class="story-circle away">
               <div class="story-inner">
@@ -289,72 +436,12 @@
             <button class="filter-btn">Trending</button>
           </div>
         </div>
-
-        <div class="post">
-          <div class="post-header">
-            <div class="profile">
-              <div class="avatar">
-                <img src="media/post 1.jpg" alt="Joshua" />
-              </div>
-              <div class="profile-info">
-                <h4>
-                  Joshua
-                  <span class="verified"
-                    ><i class="fa-solid fa-circle-check"></i
-                  ></span>
-                </h4>
-                <p class="location">
-                  <i class="fa-solid fa-location-dot"></i> Tokyo, Japan
-                </p>
-              </div>
-            </div>
-            <button class="post-menu">
-              <i class="fa-solid fa-ellipsis"></i>
-            </button>
-          </div>
-          <div class="post-image">
-            <img src="media/kagurabachi.jpg" alt="Post by Joshua" />
-          </div>
-          <div class="post-actions">
-            <div class="action-left">
-              <button class="action-btn like-btn">
-                <i class="fa-regular fa-heart"></i>
-              </button>
-              <button class="action-btn comment-btn">
-                <i class="fa-regular fa-comment"></i>
-              </button>
-              <button class="action-btn">
-                <i class="fa-regular fa-paper-plane"></i>
-              </button>
-              <button class="action-btn reaction-btn">
-                <i class="fa-regular fa-face-smile"></i>
-              </button>
-            </div>
-            <button class="action-btn bookmark-btn">
-              <i class="fa-regular fa-bookmark"></i>
-            </button>
-          </div>
-          <div class="post-info">
-            <p class="likes"><b>1,245 likes</b></p>
-            <p class="caption">
-              <b>Joshua</b> The game in Japan was amazing and I want to share
-              some photos ✨
-            </p>
-            <p class="comments-preview">View all 48 comments</p>
-            <p class="timestamp">2 hours ago</p>
-          </div>
-          <div class="reaction-picker">
-            <span class="reaction" data-reaction="❤️">❤️</span>
-            <span class="reaction" data-reaction="🔥">🔥</span>
-            <span class="reaction" data-reaction="😂">😂</span>
-            <span class="reaction" data-reaction="😮">😮</span>
-            <span class="reaction" data-reaction="🎉">🎉</span>
-            <span class="reaction" data-reaction="💯">💯</span>
-          </div>
-        </div>
+        <!-- Posts will be injected here by JavaScript -->
       </section>
     </div>
 
+    
+            <!-- ================= REFINED CREATE MODAL ================= -->
     <div class="modal-overlay" id="createModal">
       <div class="create-modal refined">
         <div class="create-header">
@@ -362,29 +449,21 @@
           <h2>Create Post</h2>
           <button class="share-btn-modal" id="sharePostBtn" disabled>Share</button>
         </div>
-        
         <div class="create-body">
           <div class="create-user-info">
             <img src="media/HIM.jpeg" alt="You" class="create-avatar" />
             <span class="create-username">Micah</span>
           </div>
-
           <textarea id="captionInput" placeholder="What's on your mind, Micah?" maxlength="500"></textarea>
-          
           <div class="upload-area" id="uploadArea">
             <i class="fa-regular fa-image"></i>
-            <p>Add a photo</p>
-            <input type="file" id="fileInput" accept="image/*" hidden />
+            <p>Add a photo or video</p>
+            <input type="file" id="fileInput" accept="image/*, video/*" hidden />
           </div>
-
-          <div id="previewContainer" class="preview-container" style="display: none;">
-            <img id="imagePreview" />
-            <button class="remove-img-btn" id="removeImgBtn"><i class="fa-solid fa-xmark"></i></button>
-          </div>
+          <div id="previewContainer" class="preview-container" style="display: none;"></div>
         </div>
       </div>
     </div>
-
     <!-- ================= BOTTOM NAV ================= -->
     <nav class="bottom-nav">
       <a href="QWEN2.html" class="nav-item active"
@@ -433,12 +512,12 @@
               <img src="media/OLD SCHOOL.png" class="chat-avatar" alt="Alex" />
               <div class="chat-info">
                 <div class="chat-header-row">
-                  <span class="chat-name">Alex Rivera</span>
-                  <span class="chat-time">10:42 AM</span>
+                  <span class="chat-name">Alex Rivera</span
+                  ><span class="chat-time">10:42 AM</span>
                 </div>
                 <div class="chat-preview-row">
-                  <span class="chat-preview"></span>
-                  <span class="unread-badge"></span>
+                  <span class="chat-preview"></span
+                  ><span class="unread-badge"></span>
                 </div>
               </div>
             </div>
@@ -449,8 +528,8 @@
               <img src="media/halo.jpg" class="chat-avatar" alt="Sarah" />
               <div class="chat-info">
                 <div class="chat-header-row">
-                  <span class="chat-name">Sarah Chen</span>
-                  <span class="chat-time">Yesterday</span>
+                  <span class="chat-name">Sarah Chen</span
+                  ><span class="chat-time">Yesterday</span>
                 </div>
                 <div class="chat-preview-row">
                   <span class="chat-preview"></span>
@@ -464,13 +543,13 @@
               <img src="media/kagurabachi.jpg" class="chat-avatar" alt="John" />
               <div class="chat-info">
                 <div class="chat-header-row">
-                  <span class="chat-name">John Martinez</span>
-                  <span class="chat-time">Mon</span>
+                  <span class="chat-name">John Martinez</span
+                  ><span class="chat-time">Mon</span>
                 </div>
                 <div class="chat-preview-row">
                   <span class="chat-preview"
-                    ><i class="fa-solid fa-image"></i>
-                  </span>
+                    ><i class="fa-solid fa-image"></i
+                  ></span>
                 </div>
               </div>
             </div>
@@ -519,7 +598,7 @@
       </div>
     </div>
 
-    <!-- ================= SPLASH SCREEN (Regular Script - Loads Immediately) ================= -->
+    <!-- ================= SPLASH SCREEN (Regular Script) ================= -->
     <script>
       window.addEventListener("load", () => {
         setTimeout(() => {
@@ -535,14 +614,21 @@
     </script>
 
     <!-- ================= FIREBASE & APP SCRIPTS ================= -->
-    <!-- ================= FIREBASE & APP SCRIPTS ================= -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import {
-        getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, where
+        getFirestore,
+        collection,
+        query,
+        orderBy,
+        onSnapshot,
+        addDoc,
+        serverTimestamp,
+        doc,
+        updateDoc,
+        where,
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-      // 🔥 NEW: Import Firebase Storage
-      import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+      // ⚠️ REMOVED: Firebase Storage imports to avoid paywall
 
       const firebaseConfig = {
         apiKey: "AIzaSyD0e21P_9lIin0GB1VGdUHAN4ZrkeEMxPI",
@@ -555,9 +641,11 @@
 
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
-      const storage = getStorage(app); // 🔥 Initialize Storage
-
-      const currentUser = { uid: "user_micah_123", name: "Micah", avatar: "media/HIM.jpeg" };
+      const currentUser = {
+        uid: "user_micah_123",
+        name: "Micah",
+        avatar: "media/HIM.jpeg",
+      };
 
       // ================= REAL-TIME POSTS =================
       const feedSection = document.querySelector(".feed-section");
@@ -566,15 +654,20 @@
         const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
         onSnapshot(q, (snapshot) => {
           const oldPosts = feedSection.querySelectorAll(".post");
-          oldPosts.forEach(post => post.remove());
+          oldPosts.forEach((post) => post.remove());
           snapshot.forEach((docSnapshot) => {
-            feedSection.insertAdjacentHTML("beforeend", createPostHTML(docSnapshot.data(), docSnapshot.id));
+            feedSection.insertAdjacentHTML(
+              "beforeend",
+              createPostHTML(docSnapshot.data(), docSnapshot.id),
+            );
           });
         });
       }
 
       function createPostHTML(post, postId) {
-        const timeAgo = post.timestamp ? getTimeAgo(post.timestamp.toDate()) : "Just now";
+        const timeAgo = post.timestamp
+          ? getTimeAgo(post.timestamp.toDate())
+          : "Just now";
         const likesCount = post.likes !== undefined ? post.likes : 0;
         return `
           <div class="post" data-post-id="${postId}">
@@ -618,8 +711,11 @@
           const postId = postElement.getAttribute("data-post-id");
           const icon = likeBtn.querySelector("i");
           const likesElement = postElement.querySelector(".likes b");
-          let currentLikes = parseInt(likesElement.textContent.replace(" likes", "").replace(/,/g, "")) || 0;
-          
+          let currentLikes =
+            parseInt(
+              likesElement.textContent.replace(" likes", "").replace(/,/g, ""),
+            ) || 0;
+
           if (icon.classList.contains("fa-regular")) {
             icon.classList.replace("fa-regular", "fa-solid");
             likeBtn.style.color = "#ef4444";
@@ -630,7 +726,11 @@
             currentLikes = Math.max(0, currentLikes - 1);
           }
           likesElement.textContent = currentLikes.toLocaleString() + " likes";
-          try { await updateDoc(doc(db, "posts", postId), { likes: currentLikes }); } catch (err) { console.error(err); }
+          try {
+            await updateDoc(doc(db, "posts", postId), { likes: currentLikes });
+          } catch (err) {
+            console.error(err);
+          }
           return;
         }
 
@@ -658,67 +758,119 @@
       const sharePostBtn = document.getElementById("sharePostBtn");
       const captionInput = document.getElementById("captionInput");
       const previewContainer = document.getElementById("previewContainer");
-      const imagePreview = document.getElementById("imagePreview");
       const removeImgBtn = document.getElementById("removeImgBtn");
 
       function updateShareButtonState() {
         const hasText = captionInput.value.trim().length > 0;
-        const hasImage = fileInput.files.length > 0;
-        sharePostBtn.disabled = !(hasText || hasImage);
+        const hasMedia = fileInput.files.length > 0;
+        sharePostBtn.disabled = !(hasText || hasMedia);
       }
 
-      openCreateBtn?.addEventListener("click", (e) => { e.preventDefault(); createModal?.classList.add("active"); });
-      closeCreateBtn?.addEventListener("click", () => { createModal?.classList.remove("active"); resetCreateForm(); });
-      createModal?.addEventListener("click", (e) => { if (e.target === createModal) { createModal.classList.remove("active"); resetCreateForm(); } });
-      
+      openCreateBtn?.addEventListener("click", (e) => {
+        e.preventDefault();
+        createModal?.classList.add("active");
+      });
+      closeCreateBtn?.addEventListener("click", () => {
+        createModal?.classList.remove("active");
+        resetCreateForm();
+      });
+      createModal?.addEventListener("click", (e) => {
+        if (e.target === createModal) {
+          createModal.classList.remove("active");
+          resetCreateForm();
+        }
+      });
+
       uploadArea?.addEventListener("click", () => fileInput?.click());
       captionInput?.addEventListener("input", updateShareButtonState);
 
+      // UPDATED: Handles both Image and Video previews
       fileInput?.addEventListener("change", function (event) {
         const file = event.target.files[0];
         if (file) {
           const fileURL = URL.createObjectURL(file);
-          imagePreview.src = fileURL;
+
+          if (file.type.startsWith("video/")) {
+            previewContainer.innerHTML = `
+              <video id="mediaPreview" controls style="width: 100%; max-height: 300px; display: block; border-radius: 12px;"></video>
+              <button class="remove-img-btn" id="removeImgBtn"><i class="fa-solid fa-xmark"></i></button>
+            `;
+            document.getElementById("mediaPreview").src = fileURL;
+          } else {
+            previewContainer.innerHTML = `
+              <img id="mediaPreview" style="width: 100%; max-height: 300px; object-fit: cover; display: block; border-radius: 12px;" />
+              <button class="remove-img-btn" id="removeImgBtn"><i class="fa-solid fa-xmark"></i></button>
+            `;
+            document.getElementById("mediaPreview").src = fileURL;
+          }
+
           previewContainer.style.display = "block";
-          uploadArea.style.display = "none"; // Hide upload area when image is selected
+          uploadArea.style.display = "none";
           updateShareButtonState();
         }
       });
 
-      removeImgBtn?.addEventListener("click", () => {
-        fileInput.value = "";
-        imagePreview.src = "";
-        previewContainer.style.display = "none";
-        uploadArea.style.display = "flex";
-        updateShareButtonState();
+      // UPDATED: Event delegation for the dynamically created remove button
+      previewContainer?.addEventListener("click", (e) => {
+        if (e.target.closest(".remove-img-btn")) {
+          fileInput.value = "";
+          previewContainer.innerHTML = "";
+          previewContainer.style.display = "none";
+          uploadArea.style.display = "flex";
+          updateShareButtonState();
+        }
       });
 
       sharePostBtn?.addEventListener("click", async (e) => {
         e.preventDefault();
         const text = captionInput.value.trim();
-        let finalImageUrl = "";
+        let finalMediaUrl = "";
 
-        // 🔥 1. Upload Image to Firebase Storage (if an image was selected)
+        // 🔥 1. Upload to Cloudinary (100% Free, Supports Images & Videos)
         if (fileInput.files[0]) {
           const file = fileInput.files[0];
-          const storageRef = ref(storage, `posts/${Date.now()}_${file.name}`);
-          
+          const formData = new FormData();
+          formData.append("file", file);
+
+          // ✅ YOUR EXACT CLOUDINARY CREDENTIALS
+          const cloudName = "azgfmicp";
+          const uploadPreset = "ORION_UPLOADS";
+
+          formData.append("upload_preset", uploadPreset);
+
           sharePostBtn.innerText = "Uploading...";
           sharePostBtn.disabled = true;
-          
+
           try {
-            const snapshot = await uploadBytes(storageRef, file);
-            finalImageUrl = await getDownloadURL(snapshot.ref); // Get permanent cloud URL
+            // ✅ "auto/upload" automatically detects if it's an image or video
+            const response = await fetch(
+              `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+              {
+                method: "POST",
+                body: formData,
+              },
+            );
+            const data = await response.json();
+
+            if (data.secure_url) {
+              finalMediaUrl = data.secure_url;
+            } else {
+              throw new Error(
+                "Upload failed: " + (data.error?.message || "Unknown error"),
+              );
+            }
           } catch (error) {
             console.error("Upload failed:", error);
-            alert("Image upload failed.");
+            alert(
+              "Media upload failed. Please check your internet connection.",
+            );
             sharePostBtn.innerText = "Share";
             updateShareButtonState();
             return;
           }
         }
 
-        // 🔥 2. Save Post to Firestore with the permanent URL
+        // 🔥 2. Save Post to Firestore
         sharePostBtn.innerText = "Posting...";
         try {
           await addDoc(collection(db, "posts"), {
@@ -726,7 +878,7 @@
             userName: currentUser.name,
             userAvatar: currentUser.avatar,
             text: text,
-            imageUrl: finalImageUrl,
+            imageUrl: finalMediaUrl, // Works for both images and videos!
             timestamp: serverTimestamp(),
             likes: 0,
           });
@@ -743,7 +895,7 @@
       function resetCreateForm() {
         captionInput.value = "";
         fileInput.value = "";
-        imagePreview.src = "";
+        previewContainer.innerHTML = "";
         previewContainer.style.display = "none";
         uploadArea.style.display = "flex";
         sharePostBtn.innerText = "Share";
@@ -756,14 +908,19 @@
           snapshot.forEach((doc) => {
             const userData = doc.data();
             const userId = doc.id;
-            const storyElement = document.querySelector(`.story[data-user-id="${userId}"]`);
+            const storyElement = document.querySelector(
+              `.story[data-user-id="${userId}"]`,
+            );
             if (storyElement) {
               const statusDot = storyElement.querySelector(".status-dot");
               if (statusDot) {
                 statusDot.className = "status-dot";
-                if (userData.status === "online") statusDot.classList.add("online-status");
-                else if (userData.status === "away") statusDot.classList.add("away-status");
-                else if (userData.status === "busy") statusDot.classList.add("busy-status");
+                if (userData.status === "online")
+                  statusDot.classList.add("online-status");
+                else if (userData.status === "away")
+                  statusDot.classList.add("away-status");
+                else if (userData.status === "busy")
+                  statusDot.classList.add("busy-status");
                 else statusDot.classList.add("offline-status");
               }
             }
@@ -776,7 +933,11 @@
       const activeChatView = document.getElementById("activeChatView");
       const messagesArea = document.getElementById("messagesArea");
       const chatMessageInput = document.getElementById("chatMessageInput");
-      const chatRooms = { "Alex Rivera": "room_alex_01", "Sarah Chen": "room_sarah_02", "John Martinez": "room_john_03" };
+      const chatRooms = {
+        "Alex Rivera": "room_alex_01",
+        "Sarah Chen": "room_sarah_02",
+        "John Martinez": "room_john_03",
+      };
       let currentChatId = null;
       let unsubscribe = null;
 
@@ -789,7 +950,9 @@
         listenToMessages();
       };
 
-      document.getElementById("backToChatListBtn")?.addEventListener("click", resetChatView);
+      document
+        .getElementById("backToChatListBtn")
+        ?.addEventListener("click", resetChatView);
       function resetChatView() {
         activeChatView.style.display = "none";
         chatListView.style.display = "flex";
@@ -798,17 +961,34 @@
       }
 
       function listenToMessages() {
-        messagesArea.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--secondary);">Loading messages...</p>';
+        messagesArea.innerHTML =
+          '<p style="text-align:center; padding: 20px; color: var(--secondary);">Loading messages...</p>';
         if (unsubscribe) unsubscribe();
-        const q = query(collection(db, "messages"), where("chatRoomId", "==", currentChatId), orderBy("timestamp", "asc"));
+        const q = query(
+          collection(db, "messages"),
+          where("chatRoomId", "==", currentChatId),
+          orderBy("timestamp", "asc"),
+        );
         unsubscribe = onSnapshot(q, (snapshot) => {
           messagesArea.innerHTML = "";
-          if (snapshot.empty) { messagesArea.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--secondary);">No messages yet. Say hello! 👋</p>'; return; }
+          if (snapshot.empty) {
+            messagesArea.innerHTML =
+              '<p style="text-align:center; padding: 20px; color: var(--secondary);">No messages yet. Say hello! 👋</p>';
+            return;
+          }
           snapshot.forEach((doc) => {
             const msg = doc.data();
             const isMe = msg.senderId === currentUser.uid;
-            const time = msg.timestamp ? msg.timestamp.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "...";
-            messagesArea.insertAdjacentHTML("beforeend", `<div class="message ${isMe ? "sent" : "received"}"><p>${msg.text}</p><span class="msg-time">${time} ${isMe ? '<i class="fa-solid fa-check-double msg-ticks read"></i>' : ""}</span></div>`);
+            const time = msg.timestamp
+              ? msg.timestamp.toDate().toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : "...";
+            messagesArea.insertAdjacentHTML(
+              "beforeend",
+              `<div class="message ${isMe ? "sent" : "received"}"><p>${msg.text}</p><span class="msg-time">${time} ${isMe ? '<i class="fa-solid fa-check-double msg-ticks read"></i>' : ""}</span></div>`,
+            );
           });
           messagesArea.scrollTop = messagesArea.scrollHeight;
         });
@@ -818,33 +998,63 @@
         const text = chatMessageInput.value.trim();
         if (!text || !currentChatId) return;
         chatMessageInput.value = "";
-        try { await addDoc(collection(db, "messages"), { chatRoomId: currentChatId, senderId: currentUser.uid, text: text, timestamp: serverTimestamp() }); } 
-        catch (error) { console.error("Error sending message: ", error); }
+        try {
+          await addDoc(collection(db, "messages"), {
+            chatRoomId: currentChatId,
+            senderId: currentUser.uid,
+            text: text,
+            timestamp: serverTimestamp(),
+          });
+        } catch (error) {
+          console.error("Error sending message: ", error);
+        }
       }
 
-      document.getElementById("sendChatMessageBtn")?.addEventListener("click", sendMessage);
-      chatMessageInput?.addEventListener("keypress", (e) => { if (e.key === "Enter") sendMessage(); });
+      document
+        .getElementById("sendChatMessageBtn")
+        ?.addEventListener("click", sendMessage);
+      chatMessageInput?.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendMessage();
+      });
 
       // ================= MODAL & THEME TOGGLES =================
       const chatModal = document.getElementById("chatModal");
-      document.getElementById("openChatBtn")?.addEventListener("click", () => chatModal?.classList.add("active"));
-      document.getElementById("closeChatBtn")?.addEventListener("click", () => { chatModal?.classList.remove("active"); resetChatView(); });
-      chatModal?.addEventListener("click", (e) => { if (e.target === chatModal) { chatModal.classList.remove("active"); resetChatView(); } });
+      document
+        .getElementById("openChatBtn")
+        ?.addEventListener("click", () => chatModal?.classList.add("active"));
+      document.getElementById("closeChatBtn")?.addEventListener("click", () => {
+        chatModal?.classList.remove("active");
+        resetChatView();
+      });
+      chatModal?.addEventListener("click", (e) => {
+        if (e.target === chatModal) {
+          chatModal.classList.remove("active");
+          resetChatView();
+        }
+      });
 
       const themeToggle = document.getElementById("themeToggle");
       const themeIcon = themeToggle?.querySelector("i");
       const body = document.body;
       const savedTheme = localStorage.getItem("orion-theme");
-      if (savedTheme === "dark") { body.classList.add("dark-mode"); themeIcon?.classList.replace("fa-moon", "fa-sun"); }
+      if (savedTheme === "dark") {
+        body.classList.add("dark-mode");
+        themeIcon?.classList.replace("fa-moon", "fa-sun");
+      }
       themeToggle?.addEventListener("click", () => {
         body.classList.toggle("dark-mode");
-        if (body.classList.contains("dark-mode")) { themeIcon?.classList.replace("fa-moon", "fa-sun"); localStorage.setItem("orion-theme", "dark"); }
-        else { themeIcon?.classList.replace("fa-sun", "fa-moon"); localStorage.setItem("orion-theme", "light"); }
+        if (body.classList.contains("dark-mode")) {
+          themeIcon?.classList.replace("fa-moon", "fa-sun");
+          localStorage.setItem("orion-theme", "dark");
+        } else {
+          themeIcon?.classList.replace("fa-sun", "fa-moon");
+          localStorage.setItem("orion-theme", "light");
+        }
       });
 
       // ================= INITIALIZE =================
       loadRealTimePosts();
-      loadRealTimeStatus(); 
-    </script>  
-      </body>
+      loadRealTimeStatus();
+    </script>
+  </body>
 </html>
