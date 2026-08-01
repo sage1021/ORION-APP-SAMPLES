@@ -212,9 +212,7 @@
               </li>
               <li class="divider"></li>
               <li>
-                <a href="login.html"
-                  ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
-                >
+              <a href="#" id="logoutLink"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
               </li>
             </ul>
           </div>
@@ -464,6 +462,58 @@
         </div>
       </div>
     </div>
+
+        <!-- ================= STORY VIEWER ================= -->
+    <div class="story-viewer" id="storyViewer">
+      <div class="story-progress-bar" id="storyProgressBar"></div>
+      <button class="close-story" id="closeStoryBtn"><i class="fa-solid fa-xmark"></i></button>
+      <button class="nav-story prev-story" id="prevStoryBtn"><i class="fa-solid fa-chevron-left"></i></button>
+      <button class="nav-story next-story" id="nextStoryBtn"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="story-viewer-content">
+        <div class="story-user-info">
+          <img src="" class="story-viewer-avatar" id="storyViewerAvatar" />
+          <div>
+            <div class="story-viewer-username" id="storyViewerName">User</div>
+            <div class="story-viewer-time" id="storyViewerTime">Just now</div>
+          </div>
+        </div>
+        <div class="story-media-container" id="storyMediaContainer"></div>
+      </div>
+    </div>
+
+    <!-- ================= COMMENTS BOTTOM SHEET ================= -->
+    <div class="post-sheet-overlay" id="commentsSheet">
+      <div class="post-bottom-sheet">
+        <div class="sheet-handle"></div>
+        <div class="post-sheet-header">
+          <h3>Comments</h3>
+          <button class="close-post-sheet" id="closeCommentsBtn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="post-comments-list" id="commentsList">
+          <p style="text-align:center; color: var(--secondary); padding: 20px;">Loading comments...</p>
+        </div>
+        <div class="post-comment-input-area">
+          <img src="media/HIM.jpeg" alt="You" id="commentUserAvatar" />
+          <input type="text" id="commentInput" placeholder="Add a comment..." />
+          <button class="post-comment-btn" id="postCommentBtn">Post</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= ACTIVITY SIDE MODAL ================= -->
+    <div class="side-modal-overlay" id="activityModal">
+      <div class="side-modal-content">
+        <div class="modal-header">
+          <h3>Activity</h3>
+          <button class="close-side-modal" id="closeActivityBtn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="activity-list" id="activityList">
+          <p style="text-align:center; color: var(--secondary); padding: 30px;">No activity yet</p>
+        </div>
+      </div>
+    </div>
+
+
     <!-- ================= BOTTOM NAV ================= -->
     <nav class="bottom-nav">
       <a href="QWEN2.html" class="nav-item active"
@@ -613,22 +663,14 @@
       });
     </script>
 
-    <!-- ================= FIREBASE & APP SCRIPTS ================= -->
+        <!-- ================= FIREBASE & APP SCRIPTS ================= -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import {
-        getFirestore,
-        collection,
-        query,
-        orderBy,
-        onSnapshot,
-        addDoc,
-        serverTimestamp,
-        doc,
-        updateDoc,
-        where,
+        getFirestore, collection, query, orderBy, onSnapshot, addDoc,
+        serverTimestamp, doc, updateDoc, where, getDoc, setDoc, increment, getDocs,
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-      // ⚠️ REMOVED: Firebase Storage imports to avoid paywall
+      import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyD0e21P_9lIin0GB1VGdUHAN4ZrkeEMxPI",
@@ -641,11 +683,58 @@
 
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
-      const currentUser = {
-        uid: "user_micah_123",
-        name: "Micah",
-        avatar: "media/HIM.jpeg",
-      };
+      const auth = getAuth(app);
+
+      let currentUser = { uid: null, name: "User", avatar: "media/HIM.jpeg" };
+      let isLoggingOut = false;
+
+      // 🔐 AUTH GUARD: Checks if user is logged in
+      onAuthStateChanged(auth, async (user) => {
+        if (!user && !isLoggingOut) {
+          window.location.replace("login.html");
+          return;
+        }
+        if (!user) return;
+
+        // ✅ User is logged in, load their real profile
+        currentUser.uid = user.uid;
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            currentUser.name = userData.name || "User";
+            currentUser.avatar = userData.avatar || "media/HIM.jpeg";
+          }
+        } catch (err) { console.error("Error loading profile:", err); }
+
+        // Update UI with real user data
+        updateUIWithUserData();
+
+        // Set status to online
+        await setDoc(doc(db, "users", user.uid), { status: "online", lastSeen: serverTimestamp() }, { merge: true });
+
+        // Initialize app features AFTER user is loaded
+        loadRealTimePosts();
+        loadRealTimeStatus();
+        loadActivities();
+      });
+
+      function updateUIWithUserData() {
+        const menuAvatar = document.querySelector(".menu-avatar");
+        if (menuAvatar) menuAvatar.src = currentUser.avatar;
+        
+        const createAvatar = document.querySelector(".create-avatar");
+        if (createAvatar) createAvatar.src = currentUser.avatar;
+        
+        const createUsername = document.querySelector(".create-username");
+        if (createUsername) createUsername.textContent = currentUser.name;
+        
+        const captionInput = document.getElementById("captionInput");
+        if (captionInput) captionInput.placeholder = `What's on your mind, ${currentUser.name}?`;
+        
+        const commentUserAvatar = document.getElementById("commentUserAvatar");
+        if (commentUserAvatar) commentUserAvatar.src = currentUser.avatar;
+      }
 
       // ================= REAL-TIME POSTS =================
       const feedSection = document.querySelector(".feed-section");
@@ -656,19 +745,15 @@
           const oldPosts = feedSection.querySelectorAll(".post");
           oldPosts.forEach((post) => post.remove());
           snapshot.forEach((docSnapshot) => {
-            feedSection.insertAdjacentHTML(
-              "beforeend",
-              createPostHTML(docSnapshot.data(), docSnapshot.id),
-            );
+            feedSection.insertAdjacentHTML("beforeend", createPostHTML(docSnapshot.data(), docSnapshot.id));
           });
         });
       }
 
       function createPostHTML(post, postId) {
-        const timeAgo = post.timestamp
-          ? getTimeAgo(post.timestamp.toDate())
-          : "Just now";
+        const timeAgo = post.timestamp ? getTimeAgo(post.timestamp.toDate()) : "Just now";
         const likesCount = post.likes !== undefined ? post.likes : 0;
+        const commentsCount = post.comments !== undefined ? post.comments : 0;
         return `
           <div class="post" data-post-id="${postId}">
             <div class="post-header">
@@ -690,6 +775,7 @@
             <div class="post-info">
               <p class="likes"><b>${likesCount} likes</b></p>
               <p class="caption"><b>${post.userName}</b> ${post.text}</p>
+              <p class="comments-preview" data-post-id="${postId}">View all ${commentsCount} comments</p>
             </div>
           </div>`;
       }
@@ -711,29 +797,32 @@
           const postId = postElement.getAttribute("data-post-id");
           const icon = likeBtn.querySelector("i");
           const likesElement = postElement.querySelector(".likes b");
-          let currentLikes =
-            parseInt(
-              likesElement.textContent.replace(" likes", "").replace(/,/g, ""),
-            ) || 0;
-
+          let currentLikes = parseInt(likesElement.textContent.replace(" likes", "").replace(/,/g, "")) || 0;
           if (icon.classList.contains("fa-regular")) {
             icon.classList.replace("fa-regular", "fa-solid");
             likeBtn.style.color = "#ef4444";
             currentLikes++;
+            createActivity(postId, "like");
           } else {
             icon.classList.replace("fa-solid", "fa-regular");
             likeBtn.style.color = "";
             currentLikes = Math.max(0, currentLikes - 1);
           }
           likesElement.textContent = currentLikes.toLocaleString() + " likes";
-          try {
-            await updateDoc(doc(db, "posts", postId), { likes: currentLikes });
-          } catch (err) {
-            console.error(err);
-          }
+          try { await updateDoc(doc(db, "posts", postId), { likes: currentLikes }); } catch (err) { console.error(err); }
           return;
         }
-
+        const commentBtn = e.target.closest(".comment-btn");
+        if (commentBtn) {
+          const postId = commentBtn.closest(".post").getAttribute("data-post-id");
+          openCommentsSheet(postId);
+          return;
+        }
+        const commentsPreview = e.target.closest(".comments-preview");
+        if (commentsPreview) {
+          openCommentsSheet(commentsPreview.getAttribute("data-post-id"));
+          return;
+        }
         const bookmarkBtn = e.target.closest(".bookmark-btn");
         if (bookmarkBtn) {
           const icon = bookmarkBtn.querySelector("i");
@@ -741,12 +830,8 @@
           icon.classList.toggle("fa-solid");
           return;
         }
-
         const shareBtn = e.target.closest(".share-btn");
-        if (shareBtn) {
-          alert("Post link copied to clipboard! 📋");
-          return;
-        }
+        if (shareBtn) { alert("Post link copied to clipboard! 📋"); return; }
       });
 
       // ================= REFINED CREATE POST MODAL =================
@@ -758,7 +843,6 @@
       const sharePostBtn = document.getElementById("sharePostBtn");
       const captionInput = document.getElementById("captionInput");
       const previewContainer = document.getElementById("previewContainer");
-      const removeImgBtn = document.getElementById("removeImgBtn");
 
       function updateShareButtonState() {
         const hasText = captionInput.value.trim().length > 0;
@@ -766,51 +850,29 @@
         sharePostBtn.disabled = !(hasText || hasMedia);
       }
 
-      openCreateBtn?.addEventListener("click", (e) => {
-        e.preventDefault();
-        createModal?.classList.add("active");
-      });
-      closeCreateBtn?.addEventListener("click", () => {
-        createModal?.classList.remove("active");
-        resetCreateForm();
-      });
-      createModal?.addEventListener("click", (e) => {
-        if (e.target === createModal) {
-          createModal.classList.remove("active");
-          resetCreateForm();
-        }
-      });
-
+      openCreateBtn?.addEventListener("click", (e) => { e.preventDefault(); createModal?.classList.add("active"); });
+      closeCreateBtn?.addEventListener("click", () => { createModal?.classList.remove("active"); resetCreateForm(); });
+      createModal?.addEventListener("click", (e) => { if (e.target === createModal) { createModal.classList.remove("active"); resetCreateForm(); } });
       uploadArea?.addEventListener("click", () => fileInput?.click());
       captionInput?.addEventListener("input", updateShareButtonState);
 
-      // UPDATED: Handles both Image and Video previews
       fileInput?.addEventListener("change", function (event) {
         const file = event.target.files[0];
         if (file) {
           const fileURL = URL.createObjectURL(file);
-
           if (file.type.startsWith("video/")) {
-            previewContainer.innerHTML = `
-              <video id="mediaPreview" controls style="width: 100%; max-height: 300px; display: block; border-radius: 12px;"></video>
-              <button class="remove-img-btn" id="removeImgBtn"><i class="fa-solid fa-xmark"></i></button>
-            `;
+            previewContainer.innerHTML = `<video id="mediaPreview" controls style="width: 100%; max-height: 300px; display: block; border-radius: 12px;"></video><button class="remove-img-btn"><i class="fa-solid fa-xmark"></i></button>`;
             document.getElementById("mediaPreview").src = fileURL;
           } else {
-            previewContainer.innerHTML = `
-              <img id="mediaPreview" style="width: 100%; max-height: 300px; object-fit: cover; display: block; border-radius: 12px;" />
-              <button class="remove-img-btn" id="removeImgBtn"><i class="fa-solid fa-xmark"></i></button>
-            `;
+            previewContainer.innerHTML = `<img id="mediaPreview" style="width: 100%; max-height: 300px; object-fit: cover; display: block; border-radius: 12px;" /><button class="remove-img-btn"><i class="fa-solid fa-xmark"></i></button>`;
             document.getElementById("mediaPreview").src = fileURL;
           }
-
           previewContainer.style.display = "block";
           uploadArea.style.display = "none";
           updateShareButtonState();
         }
       });
 
-      // UPDATED: Event delegation for the dynamically created remove button
       previewContainer?.addEventListener("click", (e) => {
         if (e.target.closest(".remove-img-btn")) {
           fileInput.value = "";
@@ -826,61 +888,34 @@
         const text = captionInput.value.trim();
         let finalMediaUrl = "";
 
-        // 🔥 1. Upload to Cloudinary (100% Free, Supports Images & Videos)
         if (fileInput.files[0]) {
           const file = fileInput.files[0];
           const formData = new FormData();
           formData.append("file", file);
-
-          // ✅ YOUR EXACT CLOUDINARY CREDENTIALS
-          const cloudName = "azgfmicp";
-          const uploadPreset = "ORION_UPLOADS";
-
-          formData.append("upload_preset", uploadPreset);
+          formData.append("upload_preset", "ORION_UPLOADS");
 
           sharePostBtn.innerText = "Uploading...";
           sharePostBtn.disabled = true;
 
           try {
-            // ✅ "auto/upload" automatically detects if it's an image or video
-            const response = await fetch(
-              `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
-              {
-                method: "POST",
-                body: formData,
-              },
-            );
+            const response = await fetch(`https://api.cloudinary.com/v1_1/azgfmicp/auto/upload`, { method: "POST", body: formData });
             const data = await response.json();
-
-            if (data.secure_url) {
-              finalMediaUrl = data.secure_url;
-            } else {
-              throw new Error(
-                "Upload failed: " + (data.error?.message || "Unknown error"),
-              );
-            }
+            if (data.secure_url) { finalMediaUrl = data.secure_url; } 
+            else { throw new Error("Upload failed: " + (data.error?.message || "Unknown error")); }
           } catch (error) {
             console.error("Upload failed:", error);
-            alert(
-              "Media upload failed. Please check your internet connection.",
-            );
+            alert("Media upload failed. Please check your internet connection.");
             sharePostBtn.innerText = "Share";
             updateShareButtonState();
             return;
           }
         }
 
-        // 🔥 2. Save Post to Firestore
         sharePostBtn.innerText = "Posting...";
         try {
           await addDoc(collection(db, "posts"), {
-            userId: currentUser.uid,
-            userName: currentUser.name,
-            userAvatar: currentUser.avatar,
-            text: text,
-            imageUrl: finalMediaUrl, // Works for both images and videos!
-            timestamp: serverTimestamp(),
-            likes: 0,
+            userId: currentUser.uid, userName: currentUser.name, userAvatar: currentUser.avatar,
+            text: text, imageUrl: finalMediaUrl, timestamp: serverTimestamp(), likes: 0,
           });
           createModal.classList.remove("active");
           resetCreateForm();
@@ -908,19 +943,14 @@
           snapshot.forEach((doc) => {
             const userData = doc.data();
             const userId = doc.id;
-            const storyElement = document.querySelector(
-              `.story[data-user-id="${userId}"]`,
-            );
+            const storyElement = document.querySelector(`.story[data-user-id="${userId}"]`);
             if (storyElement) {
               const statusDot = storyElement.querySelector(".status-dot");
               if (statusDot) {
                 statusDot.className = "status-dot";
-                if (userData.status === "online")
-                  statusDot.classList.add("online-status");
-                else if (userData.status === "away")
-                  statusDot.classList.add("away-status");
-                else if (userData.status === "busy")
-                  statusDot.classList.add("busy-status");
+                if (userData.status === "online") statusDot.classList.add("online-status");
+                else if (userData.status === "away") statusDot.classList.add("away-status");
+                else if (userData.status === "busy") statusDot.classList.add("busy-status");
                 else statusDot.classList.add("offline-status");
               }
             }
@@ -933,11 +963,7 @@
       const activeChatView = document.getElementById("activeChatView");
       const messagesArea = document.getElementById("messagesArea");
       const chatMessageInput = document.getElementById("chatMessageInput");
-      const chatRooms = {
-        "Alex Rivera": "room_alex_01",
-        "Sarah Chen": "room_sarah_02",
-        "John Martinez": "room_john_03",
-      };
+      const chatRooms = { "Alex Rivera": "room_alex_01", "Sarah Chen": "room_sarah_02", "John Martinez": "room_john_03" };
       let currentChatId = null;
       let unsubscribe = null;
 
@@ -950,9 +976,7 @@
         listenToMessages();
       };
 
-      document
-        .getElementById("backToChatListBtn")
-        ?.addEventListener("click", resetChatView);
+      document.getElementById("backToChatListBtn")?.addEventListener("click", resetChatView);
       function resetChatView() {
         activeChatView.style.display = "none";
         chatListView.style.display = "flex";
@@ -961,34 +985,20 @@
       }
 
       function listenToMessages() {
-        messagesArea.innerHTML =
-          '<p style="text-align:center; padding: 20px; color: var(--secondary);">Loading messages...</p>';
+        messagesArea.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--secondary);">Loading messages...</p>';
         if (unsubscribe) unsubscribe();
-        const q = query(
-          collection(db, "messages"),
-          where("chatRoomId", "==", currentChatId),
-          orderBy("timestamp", "asc"),
-        );
+        const q = query(collection(db, "messages"), where("chatRoomId", "==", currentChatId), orderBy("timestamp", "asc"));
         unsubscribe = onSnapshot(q, (snapshot) => {
           messagesArea.innerHTML = "";
           if (snapshot.empty) {
-            messagesArea.innerHTML =
-              '<p style="text-align:center; padding: 20px; color: var(--secondary);">No messages yet. Say hello! 👋</p>';
+            messagesArea.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--secondary);">No messages yet. Say hello! 👋</p>';
             return;
           }
           snapshot.forEach((doc) => {
             const msg = doc.data();
             const isMe = msg.senderId === currentUser.uid;
-            const time = msg.timestamp
-              ? msg.timestamp.toDate().toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-              : "...";
-            messagesArea.insertAdjacentHTML(
-              "beforeend",
-              `<div class="message ${isMe ? "sent" : "received"}"><p>${msg.text}</p><span class="msg-time">${time} ${isMe ? '<i class="fa-solid fa-check-double msg-ticks read"></i>' : ""}</span></div>`,
-            );
+            const time = msg.timestamp ? msg.timestamp.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "...";
+            messagesArea.insertAdjacentHTML("beforeend", `<div class="message ${isMe ? "sent" : "received"}"><p>${msg.text}</p><span class="msg-time">${time} ${isMe ? '<i class="fa-solid fa-check-double msg-ticks read"></i>' : ""}</span></div>`);
           });
           messagesArea.scrollTop = messagesArea.scrollHeight;
         });
@@ -998,63 +1008,306 @@
         const text = chatMessageInput.value.trim();
         if (!text || !currentChatId) return;
         chatMessageInput.value = "";
-        try {
-          await addDoc(collection(db, "messages"), {
-            chatRoomId: currentChatId,
-            senderId: currentUser.uid,
-            text: text,
-            timestamp: serverTimestamp(),
-          });
-        } catch (error) {
-          console.error("Error sending message: ", error);
-        }
+        try { await addDoc(collection(db, "messages"), { chatRoomId: currentChatId, senderId: currentUser.uid, text: text, timestamp: serverTimestamp() }); } 
+        catch (error) { console.error("Error sending message: ", error); }
       }
 
-      document
-        .getElementById("sendChatMessageBtn")
-        ?.addEventListener("click", sendMessage);
-      chatMessageInput?.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") sendMessage();
-      });
+      document.getElementById("sendChatMessageBtn")?.addEventListener("click", sendMessage);
+      chatMessageInput?.addEventListener("keypress", (e) => { if (e.key === "Enter") sendMessage(); });
 
       // ================= MODAL & THEME TOGGLES =================
       const chatModal = document.getElementById("chatModal");
-      document
-        .getElementById("openChatBtn")
-        ?.addEventListener("click", () => chatModal?.classList.add("active"));
-      document.getElementById("closeChatBtn")?.addEventListener("click", () => {
-        chatModal?.classList.remove("active");
-        resetChatView();
-      });
-      chatModal?.addEventListener("click", (e) => {
-        if (e.target === chatModal) {
-          chatModal.classList.remove("active");
-          resetChatView();
-        }
-      });
+      document.getElementById("openChatBtn")?.addEventListener("click", () => chatModal?.classList.add("active"));
+      document.getElementById("closeChatBtn")?.addEventListener("click", () => { chatModal?.classList.remove("active"); resetChatView(); });
+      chatModal?.addEventListener("click", (e) => { if (e.target === chatModal) { chatModal.classList.remove("active"); resetChatView(); } });
 
       const themeToggle = document.getElementById("themeToggle");
       const themeIcon = themeToggle?.querySelector("i");
       const body = document.body;
       const savedTheme = localStorage.getItem("orion-theme");
-      if (savedTheme === "dark") {
-        body.classList.add("dark-mode");
-        themeIcon?.classList.replace("fa-moon", "fa-sun");
-      }
+      if (savedTheme === "dark") { body.classList.add("dark-mode"); themeIcon?.classList.replace("fa-moon", "fa-sun"); }
       themeToggle?.addEventListener("click", () => {
         body.classList.toggle("dark-mode");
-        if (body.classList.contains("dark-mode")) {
-          themeIcon?.classList.replace("fa-moon", "fa-sun");
-          localStorage.setItem("orion-theme", "dark");
-        } else {
-          themeIcon?.classList.replace("fa-sun", "fa-moon");
-          localStorage.setItem("orion-theme", "light");
-        }
+        if (body.classList.contains("dark-mode")) { themeIcon?.classList.replace("fa-moon", "fa-sun"); localStorage.setItem("orion-theme", "dark"); }
+        else { themeIcon?.classList.replace("fa-sun", "fa-moon"); localStorage.setItem("orion-theme", "light"); }
       });
 
-      // ================= INITIALIZE =================
-      loadRealTimePosts();
-      loadRealTimeStatus();
-    </script>
+      // ================= 🔔 ACTIVITY SYSTEM =================
+      async function createActivity(postId, type) {
+        try {
+          const postDoc = await getDoc(doc(db, "posts", postId));
+          if (!postDoc.exists()) return;
+          const postData = postDoc.data();
+          if (postData.userId === currentUser.uid) return;
+          await addDoc(collection(db, "activities"), {
+            targetUserId: postData.userId, actorId: currentUser.uid, actorName: currentUser.name,
+            actorAvatar: currentUser.avatar, type: type, postId: postId,
+            postText: postData.text ? postData.text.substring(0, 50) : "",
+            timestamp: serverTimestamp(), read: false,
+          });
+        } catch (err) { console.error("Error creating activity:", err); }
+      }
+
+      const activityModal = document.getElementById("activityModal");
+      const activityList = document.getElementById("activityList");
+      const openActivityBtn = document.getElementById("openActivityBtn");
+      const closeActivityBtn = document.getElementById("closeActivityBtn");
+      let activityUnsubscribe = null;
+
+      const activityBadge = document.createElement("span");
+      activityBadge.className = "activity-badge";
+      activityBadge.id = "activityBadge";
+      openActivityBtn?.appendChild(activityBadge);
+
+      function loadActivities() {
+        if (!currentUser.uid) return;
+        if (activityUnsubscribe) activityUnsubscribe();
+        const q = query(collection(db, "activities"), where("targetUserId", "==", currentUser.uid), orderBy("timestamp", "desc"));
+        activityUnsubscribe = onSnapshot(q, (snapshot) => {
+          let unreadCount = 0;
+          activityList.innerHTML = "";
+          if (snapshot.empty) { activityList.innerHTML = '<p style="text-align:center; color: var(--secondary); padding: 30px;">No activity yet</p>'; }
+          snapshot.forEach((docSnap) => {
+            const act = docSnap.data();
+            if (!act.read) unreadCount++;
+            const timeAgo = act.timestamp ? getTimeAgo(act.timestamp.toDate()) : "Just now";
+            let text = "", iconClass = "";
+            if (act.type === "like") { text = "liked your post"; iconClass = "like"; }
+            else if (act.type === "comment") { text = "commented on your post"; iconClass = "comment"; }
+            else if (act.type === "follow") { text = "started following you"; iconClass = "follow"; }
+            activityList.insertAdjacentHTML("beforeend", `
+              <div class="activity-item ${act.read ? '' : 'unread'}">
+                <img src="${act.actorAvatar}" class="activity-avatar" alt="${act.actorName}" />
+                <div class="activity-text">
+                  <b>${act.actorName}</b> ${text}
+                  ${act.postText ? `<br><small style="color:var(--secondary);">"${act.postText}..."</small>` : ""}
+                  <span class="activity-time">${timeAgo}</span>
+                </div>
+                <span class="activity-icon ${iconClass}"><i class="fa-solid fa-${act.type === 'like' ? 'heart' : act.type === 'comment' ? 'comment' : 'user-plus'}"></i></span>
+              </div>`);
+          });
+          if (unreadCount > 0) { activityBadge.textContent = unreadCount > 9 ? "9+" : unreadCount; activityBadge.classList.add("show"); }
+          else { activityBadge.classList.remove("show"); }
+        });
+      }
+
+      openActivityBtn?.addEventListener("click", () => { activityModal?.classList.add("active"); markActivitiesAsRead(); });
+      closeActivityBtn?.addEventListener("click", () => activityModal?.classList.remove("active"));
+      activityModal?.addEventListener("click", (e) => { if (e.target === activityModal) activityModal.classList.remove("active"); });
+
+      async function markActivitiesAsRead() {
+        if (!currentUser.uid) return;
+        try {
+          const q = query(collection(db, "activities"), where("targetUserId", "==", currentUser.uid), where("read", "==", false));
+          const snapshot = await getDocs(q);
+          snapshot.forEach(async (d) => { await updateDoc(doc(db, "activities", d.id), { read: true }); });
+        } catch (err) { console.error(err); }
+      }
+
+      // ================= 💬 COMMENTS SYSTEM =================
+      const commentsSheet = document.getElementById("commentsSheet");
+      const commentsList = document.getElementById("commentsList");
+      const commentInput = document.getElementById("commentInput");
+      const postCommentBtn = document.getElementById("postCommentBtn");
+      const closeCommentsBtn = document.getElementById("closeCommentsBtn");
+      let currentCommentPostId = null;
+      let commentsUnsubscribe = null;
+
+      function openCommentsSheet(postId) {
+        currentCommentPostId = postId;
+        commentsSheet?.classList.add("active");
+        loadComments(postId);
+      }
+      function closeCommentsSheet() {
+        commentsSheet?.classList.remove("active");
+        currentCommentPostId = null;
+        if (commentsUnsubscribe) commentsUnsubscribe();
+        commentsList.innerHTML = "";
+      }
+      closeCommentsBtn?.addEventListener("click", closeCommentsSheet);
+      commentsSheet?.addEventListener("click", (e) => { if (e.target === commentsSheet) closeCommentsSheet(); });
+
+      function loadComments(postId) {
+        if (commentsUnsubscribe) commentsUnsubscribe();
+        commentsList.innerHTML = '<p style="text-align:center; color: var(--secondary); padding: 20px;">Loading comments...</p>';
+        const q = query(collection(db, "comments"), where("postId", "==", postId), orderBy("timestamp", "asc"));
+        commentsUnsubscribe = onSnapshot(q, (snapshot) => {
+          commentsList.innerHTML = "";
+          if (snapshot.empty) { commentsList.innerHTML = '<p style="text-align:center; color: var(--secondary); padding: 20px;">No comments yet. Be the first! 💬</p>'; return; }
+          snapshot.forEach((docSnap) => {
+            const c = docSnap.data();
+            const timeAgo = c.timestamp ? getTimeAgo(c.timestamp.toDate()) : "Just now";
+            commentsList.insertAdjacentHTML("beforeend", `
+              <div class="post-comment-item">
+                <img src="${c.userAvatar}" class="post-comment-avatar" alt="${c.userName}" />
+                <div class="post-comment-body">
+                  <div class="post-comment-user">${c.userName}</div>
+                  <div class="post-comment-text">${c.text}</div>
+                  <div class="post-comment-meta">${timeAgo}</div>
+                </div>
+              </div>`);
+          });
+          commentsList.scrollTop = commentsList.scrollHeight;
+        }, (error) => {
+          console.error("Comments query error:", error);
+          commentsList.innerHTML = '<p style="text-align:center; color: #ef4444; padding: 20px;">Error loading comments. Check console (F12).</p>';
+        });
+      }
+
+      commentInput?.addEventListener("input", () => {
+        if (commentInput.value.trim().length > 0) postCommentBtn?.classList.add("active");
+        else postCommentBtn?.classList.remove("active");
+      });
+
+      postCommentBtn?.addEventListener("click", async () => {
+        const text = commentInput.value.trim();
+        if (!text || !currentCommentPostId) return;
+        commentInput.value = "";
+        postCommentBtn.classList.remove("active");
+        try {
+          await addDoc(collection(db, "comments"), { postId: currentCommentPostId, userId: currentUser.uid, userName: currentUser.name, userAvatar: currentUser.avatar, text: text, timestamp: serverTimestamp() });
+          await updateDoc(doc(db, "posts", currentCommentPostId), { comments: increment(1) });
+          createActivity(currentCommentPostId, "comment");
+        } catch (err) { console.error("Error posting comment:", err); }
+      });
+
+      commentInput?.addEventListener("keypress", (e) => { if (e.key === "Enter") postCommentBtn?.click(); });
+
+      // ================= 📖 STORY VIEWER =================
+      const storyViewer = document.getElementById("storyViewer");
+      const storyProgressBar = document.getElementById("storyProgressBar");
+      const storyMediaContainer = document.getElementById("storyMediaContainer");
+      const storyViewerAvatar = document.getElementById("storyViewerAvatar");
+      const storyViewerName = document.getElementById("storyViewerName");
+      const closeStoryBtn = document.getElementById("closeStoryBtn");
+      const prevStoryBtn = document.getElementById("prevStoryBtn");
+      const nextStoryBtn = document.getElementById("nextStoryBtn");
+      let storiesData = [], currentStoryIndex = 0, storyTimer = null, storyProgressInterval = null;
+      const STORY_DURATION = 5000;
+
+      function collectStories() {
+        storiesData = [];
+        document.querySelectorAll(".story").forEach((story) => {
+          const img = story.querySelector(".story-inner img");
+          const name = story.querySelector("p")?.textContent || "User";
+          const storyImg = story.getAttribute("data-story-img");
+          const storyVideo = story.getAttribute("data-story-video");
+          if (storyImg || storyVideo) {
+            storiesData.push({ name, avatar: img ? img.src : "media/HIM.jpeg", media: storyImg || storyVideo, isVideo: !!storyVideo });
+          }
+        });
+      }
+
+      function openStoryViewer(index) {
+        collectStories();
+        if (storiesData.length === 0) return;
+        currentStoryIndex = index;
+        storyViewer?.classList.add("active");
+        buildProgressBars();
+        showStory(currentStoryIndex);
+      }
+
+      function closeStoryViewer() {
+        storyViewer?.classList.remove("active");
+        clearTimeout(storyTimer);
+        clearInterval(storyProgressInterval);
+        storyMediaContainer.innerHTML = "";
+      }
+
+      function buildProgressBars() {
+        storyProgressBar.innerHTML = "";
+        storiesData.forEach(() => {
+          const seg = document.createElement("div");
+          seg.className = "story-progress-segment";
+          seg.innerHTML = '<div class="fill"></div>';
+          storyProgressBar.appendChild(seg);
+        });
+      }
+
+      function showStory(index) {
+        if (index < 0 || index >= storiesData.length) { closeStoryViewer(); return; }
+        clearTimeout(storyTimer);
+        clearInterval(storyProgressInterval);
+        currentStoryIndex = index;
+        const story = storiesData[index];
+        storyViewerAvatar.src = story.avatar;
+        storyViewerName.textContent = story.name;
+        const segments = storyProgressBar.querySelectorAll(".story-progress-segment");
+        segments.forEach((seg, i) => {
+          seg.classList.remove("active", "done");
+          seg.querySelector(".fill").style.width = "0%";
+          if (i < index) seg.classList.add("done");
+          if (i === index) seg.classList.add("active");
+        });
+        if (story.isVideo) {
+          storyMediaContainer.innerHTML = `<video src="${story.media}" autoplay playsinline style="max-width:100%;max-height:100%;object-fit:contain;"></video>`;
+          storyMediaContainer.querySelector("video").addEventListener("ended", () => goToNextStory());
+        } else {
+          storyMediaContainer.innerHTML = `<img src="${story.media}" alt="${story.name}" />`;
+        }
+        let progress = 0;
+        const activeFill = segments[index]?.querySelector(".fill");
+        storyProgressInterval = setInterval(() => {
+          progress += 100 / (STORY_DURATION / 50);
+          if (activeFill) activeFill.style.width = Math.min(progress, 100) + "%";
+        }, 50);
+        storyTimer = setTimeout(() => goToNextStory(), STORY_DURATION);
+      }
+
+      function goToNextStory() { currentStoryIndex < storiesData.length - 1 ? showStory(currentStoryIndex + 1) : closeStoryViewer(); }
+      function goToPrevStory() { if (currentStoryIndex > 0) showStory(currentStoryIndex - 1); }
+
+      closeStoryBtn?.addEventListener("click", closeStoryViewer);
+      nextStoryBtn?.addEventListener("click", goToNextStory);
+      prevStoryBtn?.addEventListener("click", goToPrevStory);
+
+      document.querySelectorAll(".story").forEach((story) => {
+        story.addEventListener("click", () => {
+          const storyImg = story.getAttribute("data-story-img");
+          const storyVideo = story.getAttribute("data-story-video");
+          if (storyImg || storyVideo) {
+            collectStories();
+            const name = story.querySelector("p")?.textContent;
+            const idx = storiesData.findIndex(s => s.name === name);
+            openStoryViewer(idx >= 0 ? idx : 0);
+          }
+        });
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (!storyViewer?.classList.contains("active")) return;
+        if (e.key === "ArrowRight") goToNextStory();
+        else if (e.key === "ArrowLeft") goToPrevStory();
+        else if (e.key === "Escape") closeStoryViewer();
+      });
+
+      // ================= DROPDOWN MENU =================
+      const menuBtn = document.getElementById("menu-btn");
+      const dropdown = document.getElementById("dropdown");
+      menuBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+      });
+      window.addEventListener("click", () => { if (dropdown) dropdown.style.display = "none"; });
+
+      // ================= LOGOUT =================
+      const logoutLink = document.getElementById("logoutLink");
+      logoutLink?.addEventListener("click", async (e) => {
+        e.preventDefault();
+        isLoggingOut = true; // ✅ Prevents redirect loop
+        try {
+          if (auth.currentUser) {
+            await setDoc(doc(db, "users", auth.currentUser.uid), { status: "offline", lastSeen: serverTimestamp() }, { merge: true });
+          }
+          await signOut(auth);
+          localStorage.clear();
+          sessionStorage.clear();
+          window.location.replace("login.html");
+        } catch (err) { 
+          console.error("Logout error:", err);
+          window.location.replace("login.html"); 
+        }
+      });
+</script>
   </body>
 </html>
