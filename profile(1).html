@@ -4,197 +4,388 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="media/MINI LOGO 1.jpg" />
-    <title>Profile — Orion</title>
+    <link rel="stylesheet" href="Qwen.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <title>ORION - Profile</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- Icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
-    <link rel="stylesheet" href="PROFILE STYLE.CSS" />
+    <style>
+      .profile-header {
+        background: var(--surface);
+        border-radius: 16px;
+        padding: 30px 20px;
+        text-align: center;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px var(--shadow);
+      }
+      .profile-avatar-large {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--surface);
+        box-shadow: 0 4px 15px var(--shadow);
+        margin-bottom: 15px;
+      }
+      .profile-name { font-size: 22px; font-weight: 700; color: var(--text); margin: 0; }
+      .profile-handle { font-size: 14px; color: var(--secondary); margin-top: 4px; }
+      .profile-bio { font-size: 14px; color: var(--text); margin: 15px auto; max-width: 400px; line-height: 1.5; }
+      .profile-stats { display: flex; justify-content: center; gap: 40px; margin: 20px 0; }
+      .stat { text-align: center; }
+      .stat-value { font-size: 18px; font-weight: 700; color: var(--text); }
+      .stat-label { font-size: 12px; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
+      .edit-profile-btn {
+        background: var(--surface); color: var(--text); border: 1px solid var(--border);
+        padding: 10px 24px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.2s;
+      }
+      .edit-profile-btn:hover { background: var(--border); }
+      .profile-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+      .profile-tab {
+        flex: 1; text-align: center; padding: 15px; font-size: 14px; font-weight: 600;
+        color: var(--secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: 0.2s;
+      }
+      .profile-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+      .edit-modal-overlay {
+        position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center;
+      }
+      .edit-modal-overlay.active { display: flex; }
+      .edit-modal {
+        background: var(--surface); width: 90%; max-width: 400px; border-radius: 16px;
+        padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      }
+      .edit-modal h3 { margin: 0 0 20px 0; color: var(--text); }
+      .edit-input {
+        width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border);
+        border-radius: 8px; background: var(--surface); color: var(--text); font-family: inherit; font-size: 14px;
+      }
+      .edit-input:focus { outline: none; border-color: var(--primary); }
+      .save-profile-btn {
+        width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none;
+        border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;
+      }
+      .save-profile-btn:hover { opacity: 0.9; }
+      .cancel-edit-btn {
+        width: 100%; padding: 12px; background: transparent; color: var(--secondary);
+        border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 10px;
+      }
+    </style>
   </head>
   <body>
-    <!-- SPLASH SCREEN (Fixed: removed broken .circle wrapper) -->
-    <div id="splash-screen">
-      <div class="splash-content">
-        <img
-          src="media/MINI_LOGO no bg.png"
-          alt="Orion Logo"
-          class="splash-logo"
-        />
-        <div class="loading-ring"></div>
-      </div>
-    </div>
-
-    <!-- HEADER -->
-    <header>
-      <div class="logo">
-        <img src="media/ORION_logo_ GRADIENT no bg.png" alt="orion" />
-      </div>
-
-      <div class="search-bar">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Search Orion..." />
-      </div>
-
-      <div class="header-actions">
-        <a href="ORION ACTIVITY.HTML"> <i class="fa-regular fa-bell"></i></a>
-        <a href="CHAT UI.HTML"><i class="fa-regular fa-paper-plane"></i></a>
-        <div class="menu-wrap" tabindex="0">
-          <i class="fa-solid fa-bars"></i>
-          <div class="dropdown">
-            <a href="profile.html"
-              ><i class="fa-regular fa-user"></i> View profile</a
-            >
-            <a href="setting.html"><i class="fa-solid fa-gear"></i> Settings</a>
-            <a href="#"><i class="fa-regular fa-bookmark"></i> Saved</a>
-            <hr />
-            <!-- FIXED: Added id="logout-btn" here -->
-            <a href="#" id="logout-btn"
-              ><i class="fa-solid fa-arrow-right-from-bracket"></i> Log out</a
-            >
+    <!-- ================= HEADER ================= -->
+    <header class="main-header">
+      <div class="container header-container">
+        <div class="logo-div">
+          <img src="media/ORION_logo_ GRADIENT no bg.png" alt="ORION Logo" class="logo" />
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn theme-toggle" id="themeToggle" title="Toggle Dark Mode"><i class="fa-solid fa-moon"></i></button>
+          <div class="menu-div">
+            <button id="menu-btn" class="menu-btn">
+              <img src="media/HIM.jpeg" alt="Menu" class="menu-avatar" id="headerAvatar" />
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <ul id="dropdown">
+              <li><a href="QWEN2.html"><i class="fa-solid fa-house"></i> Home</a></li>
+              <li><a href="setting.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+              <li class="divider"></li>
+              <li><a href="#" id="logoutLink"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+            </ul>
           </div>
         </div>
       </div>
     </header>
 
-    <!-- PROFILE INFO -->
-    <section class="profile-card">
-      <div class="profile-top">
-        <div class="avatar-ring">
-          <div class="avatar"></div>
+    <div class="container main-content">
+      <!-- ================= PROFILE HEADER ================= -->
+      <section class="profile-header">
+        <img src="media/HIM.jpeg" alt="Profile" class="profile-avatar-large" id="profileAvatar" />
+        <h1 class="profile-name" id="profileName">Loading...</h1>
+        <p class="profile-handle" id="profileHandle">@user</p>
+        <p class="profile-bio" id="profileBio">Welcome to my ORION profile! 🚀</p>
+        
+        <div class="profile-stats">
+          <div class="stat"><div class="stat-value" id="postCount">0</div><div class="stat-label">Posts</div></div>
+          <div class="stat"><div class="stat-value">1.2k</div><div class="stat-label">Followers</div></div>
+          <div class="stat"><div class="stat-value">340</div><div class="stat-label">Following</div></div>
         </div>
+        <button class="edit-profile-btn" id="openEditProfileBtn">Edit Profile</button>
+      </section>
 
-        <div class="profile-identity">
-          <h1 class="profile-name">Micah</h1>
-          <p class="profile-handle">@djenzo1434</p>
-
-          <div class="profile-stats">
-            <div><strong>24</strong> posts</div>
-            <div><strong>318</strong> followers</div>
-            <div><strong>402</strong> following</div>
-          </div>
-
-          <div class="profile-actions">
-            <button class="btn">Edit profile</button>
-            <button class="btn secondary">Share profile</button>
-          </div>
-        </div>
+      <!-- ================= PROFILE TABS ================= -->
+      <div class="profile-tabs">
+        <div class="profile-tab active"><i class="fa-solid fa-grid-2"></i> Posts</div>
+        <div class="profile-tab"><i class="fa-regular fa-heart"></i> Likes</div>
+        <div class="profile-tab"><i class="fa-regular fa-bookmark"></i> Saved</div>
       </div>
 
-      <p class="profile-bio">
-        Building <span class="tag">Orion</span> — web dev student in Abuja,
-        learning one layer at a time. Interested in AI, security, and making
-        tech that actually helps people.
-      </p>
-    </section>
-
-    <!-- TABS -->
-    <nav class="tabs">
-      <a href="#" class="tab-link active" data-target="posts-grid">
-        <i class="fa-solid fa-table-cells"></i> Posts
-      </a>
-      <a href="#" class="tab-link" data-target="reels-grid">
-        <i class="fa-solid fa-video"></i> Reels
-      </a>
-      <a href="#" class="tab-link" data-target="saved-grid">
-        <i class="fa-regular fa-bookmark"></i> Saved
-      </a>
-    </nav>
-
-    <!-- POSTS GRID -->
-    <div class="grid tab-content active" id="posts-grid">
-      <div class="tile"><img src="media/draken.jpg" alt="" /></div>
-      <div class="tile"><img src="media/INDRA-ASHURA.jpg" alt="" /></div>
-      <div class="tile"><img src="media/meme 2 naruto.jpg" alt="" /></div>
-      <div class="tile"><img src="media/micah.png" alt="" /></div>
-      <div class="tile"><img src="media/slam dunk 2.jpg" alt="" /></div>
-      <div class="tile"><img src="media/wind breaker..jpg" alt="" /></div>
+      <!-- ================= USER POSTS FEED ================= -->
+      <section class="feed-section" id="userPostsFeed">
+        <p style="text-align:center; color: var(--secondary); padding: 40px;">Loading posts...</p>
+      </section>
     </div>
 
-    <!-- REELS GRID (Empty State) -->
-    <div class="grid tab-content" id="reels-grid">
-      <div class="empty-state">
-        <i class="fa-solid fa-video"></i>
-        <h3>No Reels Yet</h3>
-        <p>When you create or share reels, they will appear here.</p>
+    <!-- ================= EDIT PROFILE MODAL ================= -->
+    <div class="edit-modal-overlay" id="editProfileModal">
+      <div class="edit-modal">
+        <h3>Edit Profile</h3>
+        <input type="text" class="edit-input" id="editNameInput" placeholder="Display Name" />
+        <input type="text" class="edit-input" id="editBioInput" placeholder="Bio" maxlength="150" />
+        <button class="save-profile-btn" id="saveProfileBtn">Save Changes</button>
+        <button class="cancel-edit-btn" id="cancelEditBtn">Cancel</button>
       </div>
     </div>
 
-    <!-- SAVED GRID (Empty State) -->
-    <div class="grid tab-content" id="saved-grid">
-      <div class="empty-state">
-        <i class="fa-regular fa-bookmark"></i>
-        <h3>No Saved Posts</h3>
-        <p>Save photos and videos that you want to see again.</p>
-      </div>
-    </div>
-
-    <!-- BOTTOM NAVIGATION -->
+    <!-- ================= BOTTOM NAV ================= -->
     <nav class="bottom-nav">
-      <a href="QWEN2.html"><i class="fa-solid fa-house"></i></a>
-      <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
-      <a href="create.html"><i class="fa-regular fa-square-plus"></i></a>
-      <a href="reels.html"><i class="fa-solid fa-video"></i></a>
-      <a href="profile.html" class="active"><i class="fa-solid fa-user"></i></a>
+      <a href="QWEN2.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+      <a href="ORION EXPLORE.HTML" class="nav-item"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></a>
+      <a href="QWEN2.html" class="nav-item create-btn"><i class="fa-regular fa-square-plus"></i><span>Create</span></a>
+      <a href="ORION ACTIVITY.HTML" class="nav-item"><i class="fa-regular fa-heart"></i><span>Activity</span></a>
+      <a href="profile(1).html" class="nav-item active"><i class="fa-solid fa-user"></i><span>Profile</span></a>
     </nav>
 
-    <script>
-      // 1. BULLETPROOF SPLASH SCREEN
-      setTimeout(() => {
-        const splash = document.getElementById("splash-screen");
-        if (splash) {
-          splash.classList.add("fade-out");
-          setTimeout(() => {
-            splash.style.display = "none";
-          }, 600);
+    <!-- ================= FIREBASE & APP SCRIPTS ================= -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore, collection, query, where, orderBy, onSnapshot, doc, getDoc, setDoc, serverTimestamp
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyD0e21P_9lIin0GB1VGdUHAN4ZrkeEMxPI",
+        authDomain: "orion--project.firebaseapp.com",
+        projectId: "orion--project",
+        storageBucket: "orion--project.firebasestorage.app",
+        messagingSenderId: "91554323371",
+        appId: "1:91554323371:web:5b5ba0c66b6d767ed6d0ee",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+
+      let currentUser = { uid: null, name: "User", avatar: "media/HIM.jpeg", bio: "Welcome to my ORION profile! 🚀" };
+      let isLoggingOut = false;
+
+      console.log("🔄 Profile page loaded. Checking auth state...");
+
+      // 🔐 AUTH GUARD
+      onAuthStateChanged(auth, async (user) => {
+        console.log("Auth state changed. User:", user ? user.uid : "None");
+        
+        if (!user && !isLoggingOut) {
+          console.warn("⚠️ No user found. Redirecting to login.");
+          window.location.replace("login.html");
+          return;
         }
-      }, 1500);
+        if (!user) return;
 
-      // 2. TAB SWITCHING LOGIC
-      const tabLinks = document.querySelectorAll(".tab-link");
-      const tabContents = document.querySelectorAll(".tab-content");
+        currentUser.uid = user.uid;
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            currentUser.name = userData.name || "User";
+            currentUser.avatar = userData.avatar || "media/HIM.jpeg";
+            currentUser.bio = userData.bio || "Welcome to my ORION profile! 🚀";
+          }
+        } catch (err) { console.error("❌ Error loading profile:", err); }
 
-      tabLinks.forEach((link) => {
-        link.addEventListener("click", (e) => {
+        updateProfileUI();
+        loadUserPosts();
+        setupDropdownAndLogout();
+      });
+
+      function updateProfileUI() {
+        console.log("✅ Updating Profile UI for:", currentUser.name);
+        document.getElementById("profileName").textContent = currentUser.name;
+        document.getElementById("profileHandle").textContent = `@${currentUser.name.toLowerCase().replace(/\s+/g, '')}`;
+        document.getElementById("profileBio").textContent = currentUser.bio;
+        document.getElementById("profileAvatar").src = currentUser.avatar;
+        document.getElementById("headerAvatar").src = currentUser.avatar;
+        document.getElementById("editNameInput").value = currentUser.name;
+        document.getElementById("editBioInput").value = currentUser.bio;
+      }
+
+      // ================= LOAD USER POSTS =================
+      function loadUserPosts() {
+        console.log("📡 Loading posts for userId:", currentUser.uid);
+        const feed = document.getElementById("userPostsFeed");
+        const q = query(collection(db, "posts"), where("userId", "==", currentUser.uid), orderBy("timestamp", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+          console.log("✅ Posts snapshot received. Count:", snapshot.size);
+          document.getElementById("postCount").textContent = snapshot.size;
+          feed.innerHTML = "";
+          
+          if (snapshot.empty) {
+            feed.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--secondary);">
+              <i class="fa-regular fa-image" style="font-size: 48px; margin-bottom: 15px; display:block;"></i>
+              No posts yet. Create your first post!
+            </div>`;
+            return;
+          }
+
+          snapshot.forEach((docSnap) => {
+            const post = docSnap.data();
+            const postId = docSnap.id;
+            const timeAgo = post.timestamp ? getTimeAgo(post.timestamp.toDate()) : "Just now";
+            const likesCount = post.likes !== undefined ? post.likes : 0;
+            const commentsCount = post.comments !== undefined ? post.comments : 0;
+
+            feed.insertAdjacentHTML("beforeend", `
+              <div class="post" data-post-id="${postId}">
+                <div class="post-header">
+                  <div class="profile">
+                    <div class="avatar"><img src="${post.userAvatar}" alt="${post.userName}" /></div>
+                    <div class="profile-info"><h4>${post.userName}</h4><p class="timestamp">${timeAgo}</p></div>
+                  </div>
+                </div>
+                ${post.imageUrl ? `<div class="post-image"><img src="${post.imageUrl}" alt="Post" /></div>` : ""}
+                <div class="post-actions">
+                  <div class="action-left">
+                    <button class="action-btn like-btn"><i class="fa-regular fa-heart"></i></button>
+                    <button class="action-btn"><i class="fa-regular fa-comment"></i></button>
+                    <button class="action-btn"><i class="fa-regular fa-paper-plane"></i></button>
+                  </div>
+                  <button class="action-btn bookmark-btn"><i class="fa-regular fa-bookmark"></i></button>
+                </div>
+                <div class="post-info">
+                  <p class="likes"><b>${likesCount} likes</b></p>
+                  <p class="caption"><b>${post.userName}</b> ${post.text}</p>
+                  <p class="comments-preview">View all ${commentsCount} comments</p>
+                </div>
+              </div>
+            `);
+          });
+        }, (error) => {
+          // 🔥 THIS CATCHES THE MISSING INDEX ERROR
+          console.error("❌ ERROR LOADING POSTS:", error);
+          feed.innerHTML = `<div style="text-align:center; padding: 40px; color: #ef4444;">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size: 48px; margin-bottom: 15px; display:block;"></i>
+            <strong>Error loading posts.</strong><br>
+            <small>Check Console (F12) for details. You likely need to create a Firestore Index.</small><br>
+            <small style="color: #666;">${error.message}</small>
+          </div>`;
+        });
+      }
+
+      function getTimeAgo(date) {
+        const seconds = Math.floor((new Date() - date) / 1000);
+        if (seconds < 60) return "Just now";
+        const minutes = Math.floor(seconds / 60);
+        if (minutes < 60) return `${minutes}m ago`;
+        const hours = Math.floor(minutes / 60);
+        if (hours < 24) return `${hours}h ago`;
+        return `${Math.floor(hours / 24)}d ago`;
+      }
+
+      // ================= EDIT PROFILE LOGIC =================
+      const editModal = document.getElementById("editProfileModal");
+      document.getElementById("openEditProfileBtn")?.addEventListener("click", () => editModal.classList.add("active"));
+      document.getElementById("cancelEditBtn")?.addEventListener("click", () => editModal.classList.remove("active"));
+      editModal?.addEventListener("click", (e) => { if (e.target === editModal) editModal.classList.remove("active"); });
+
+      document.getElementById("saveProfileBtn")?.addEventListener("click", async () => {
+        const newName = document.getElementById("editNameInput").value.trim();
+        const newBio = document.getElementById("editBioInput").value.trim();
+        const btn = document.getElementById("saveProfileBtn");
+
+        if (!newName) { alert("Name cannot be empty"); return; }
+
+        btn.textContent = "Saving...";
+        btn.disabled = true;
+
+        try {
+          await setDoc(doc(db, "users", currentUser.uid), { name: newName, bio: newBio, avatar: currentUser.avatar }, { merge: true });
+          currentUser.name = newName;
+          currentUser.bio = newBio;
+          updateProfileUI();
+          editModal.classList.remove("active");
+          alert("Profile updated successfully!");
+        } catch (err) {
+          console.error("❌ Error updating profile:", err);
+          alert("Failed to save changes.");
+        } finally {
+          btn.textContent = "Save Changes";
+          btn.disabled = false;
+        }
+      });
+
+      // ================= DROPDOWN & LOGOUT =================
+      function setupDropdownAndLogout() {
+        const menuBtn = document.getElementById("menu-btn");
+        const dropdown = document.getElementById("dropdown");
+        menuBtn?.addEventListener("click", (e) => {
+          e.stopPropagation();
+          dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        });
+        window.addEventListener("click", () => { if (dropdown) dropdown.style.display = "none"; });
+
+        const logoutLink = document.getElementById("logoutLink");
+        logoutLink?.addEventListener("click", async (e) => {
           e.preventDefault();
-          tabLinks.forEach((l) => l.classList.remove("active"));
-          tabContents.forEach((c) => c.classList.remove("active"));
-          link.classList.add("active");
+          isLoggingOut = true;
+          try {
+            if (auth.currentUser) {
+              await setDoc(doc(db, "users", auth.currentUser.uid), { status: "offline", lastSeen: serverTimestamp() }, { merge: true });
+            }
+            await signOut(auth);
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.replace("login.html");
+          } catch (err) { 
+            console.error("❌ Logout error:", err);
+            window.location.replace("login.html"); 
+          }
+        });
+      }  
 
-          const targetId = link.getAttribute("data-target");
-          const targetContent = document.getElementById(targetId);
-          if (targetContent) {
-            targetContent.classList.add("active");
+           // ================= TAB SWITCHING =================
+      const profileTabs = document.querySelectorAll(".profile-tab");
+      const userPostsFeed = document.getElementById("userPostsFeed");
+      
+      profileTabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => {
+          // Remove active class from all tabs
+          profileTabs.forEach(t => t.classList.remove("active"));
+          // Add active class to clicked tab
+          tab.classList.add("active");
+          
+          // Switch content based on tab
+          if (index === 0) {
+            // Posts tab - show user's posts
+            loadUserPosts();
+          } else if (index === 1) {
+            // Likes tab - show placeholder
+            userPostsFeed.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--secondary);">
+              <i class="fa-regular fa-heart" style="font-size: 48px; margin-bottom: 15px; display:block;"></i>
+              <strong>Liked Posts</strong><br>
+              <small>Posts you've liked will appear here.</small>
+            </div>`;
+          } else if (index === 2) {
+            // Saved tab - show placeholder
+            userPostsFeed.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--secondary);">
+              <i class="fa-regular fa-bookmark" style="font-size: 48px; margin-bottom: 15px; display:block;"></i>
+              <strong>Saved Posts</strong><br>
+              <small>Posts you've bookmarked will appear here.</small>
+            </div>`;
           }
         });
       });
 
-      // 3. LOGOUT LOGIC
-      const logoutBtn = document.getElementById("logout-btn");
-      if (logoutBtn) {
-        logoutBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-          localStorage.clear();
-          sessionStorage.clear();
-          window.location.replace("login.html");
-        });
-      }
-
-      // 4. DARK MODE SYNC
+      // ================= THEME TOGGLE =================
+      const themeToggle = document.getElementById("themeToggle");
+      const themeIcon = themeToggle?.querySelector("i");
       const body = document.body;
       const savedTheme = localStorage.getItem("orion-theme");
-      if (savedTheme === "dark") {
-        body.classList.add("dark-mode");
-      }
+      if (savedTheme === "dark") { body.classList.add("dark-mode"); themeIcon?.classList.replace("fa-moon", "fa-sun"); }
+      themeToggle?.addEventListener("click", () => {
+        body.classList.toggle("dark-mode");
+        if (body.classList.contains("dark-mode")) { themeIcon?.classList.replace("fa-moon", "fa-sun"); localStorage.setItem("orion-theme", "dark"); }
+        else { themeIcon?.classList.replace("fa-sun", "fa-moon"); localStorage.setItem("orion-theme", "light"); }
+      });
     </script>
   </body>
 </html>
