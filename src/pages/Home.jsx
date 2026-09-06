@@ -5,6 +5,7 @@ import Sidebar from '../components/layout/Sidebar';
 import PostCard from '../components/feed/PostCard';
 import ComposerModal from '../components/feed/ComposerModal';
 import MobileNav from '../components/layout/MobileNav';
+import { PostSkeleton } from '../components/common/Skeleton';
 import usePosts from '../hooks/usePosts';
 import { useAuth } from '../hooks/useAuth';
 
@@ -50,13 +51,15 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Stories Bar */}
         <section className="stories" aria-label="Stories">
-          <button className="story add" onClick={() => setComposerOpen(true)} type="button">
+          <button className="story" onClick={() => setComposerOpen(true)} type="button" aria-label="Create story">
             <span><i className="fa-solid fa-plus"></i></span>
             <b>Create</b>
           </button>
         </section>
 
+        {/* Quick Composer Card */}
         <section className="composer-card" aria-label="Create a post">
           <img src={userProfile?.avatar || '/media/HIM.jpeg'} alt={userProfile?.name || 'You'} />
           <button onClick={() => setComposerOpen(true)} type="button">
@@ -64,6 +67,7 @@ export default function Home() {
           </button>
         </section>
 
+        {/* Feed Filter Tools */}
         <section className="feed-tools" id="feed">
           <div className="tabs" role="tablist" aria-label="Feed filters">
             {filters.map(f => (
@@ -78,22 +82,66 @@ export default function Home() {
             ))}
           </div>
           <p id="resultCount">
-            {loading ? 'Loading...' : `Showing ${filteredPosts.length} ${filteredPosts.length === 1 ? 'post' : 'posts'}`}
+            {loading ? 'Fetching feed...' : `${filteredPosts.length} ${filteredPosts.length === 1 ? 'post' : 'posts'}`}
           </p>
         </section>
 
+        {/* Feed List with Shimmer Skeletons */}
         <section className="feed-list" id="feedList" aria-live="polite">
           {loading ? (
-            <article className="post"><div className="post-copy"><b>Loading posts...</b></div></article>
+            <>
+              <PostSkeleton />
+              <PostSkeleton />
+              <PostSkeleton />
+            </>
           ) : filteredPosts.length > 0 ? (
             filteredPosts.map(post => <PostCard key={post.id} post={post} />)
           ) : (
-            <article className="post">
-              <div className="post-copy">
-                <b>No matches yet</b>
-                <p>Try a different search or feed filter.</p>
+            <div style={{
+              padding: '48px 24px',
+              textAlign: 'center',
+              background: 'var(--surface)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-lg)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '12px'
+            }}>
+              <div style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '50%',
+                background: 'var(--surface-soft)',
+                display: 'grid',
+                placeItems: 'center',
+                color: 'var(--primary)',
+                fontSize: '1.4rem'
+              }}>
+                <i className="fa-solid fa-layer-group"></i>
               </div>
-            </article>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700 }}>No posts found</h3>
+              <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem', maxWidth: '320px' }}>
+                {searchQuery ? `No posts matching "${searchQuery}". Try a different term or filter.` : 'Be the first to share an update, art drop, or video on ORION.'}
+              </p>
+              <button
+                onClick={() => setComposerOpen(true)}
+                type="button"
+                style={{
+                  marginTop: '8px',
+                  padding: '9px 20px',
+                  borderRadius: 'var(--radius-full)',
+                  border: 'none',
+                  background: 'var(--primary)',
+                  color: '#ffffff',
+                  fontWeight: 700,
+                  fontSize: '0.88rem',
+                  cursor: 'pointer'
+                }}
+              >
+                Create a Post
+              </button>
+            </div>
           )}
         </section>
       </main>

@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, orderBy, onSnapshot, getDocs } from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useAuth } from '../hooks/useAuth';
 import Navbar from '../components/layout/Navbar';
 import Topbar from '../components/layout/Topbar';
 import PostCard from '../components/feed/PostCard';
 import Avatar from '../components/common/Avatar';
+import { PostSkeleton } from '../components/common/Skeleton';
+import ComposerModal from '../components/feed/ComposerModal';
+import MobileNav from '../components/layout/MobileNav';
 
 export default function Profile() {
   const { currentUser, userProfile } = useAuth();
   const [userPosts, setUserPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({ posts: 0, followers: 0, following: 0 });
+  const [activeTab, setActiveTab] = useState('posts');
+  const [composerOpen, setComposerOpen] = useState(false);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -22,74 +26,128 @@ export default function Profile() {
       orderBy('createdAt', 'desc')
     );
 
-    // Listener: User Posts | Triggers on own post create/update/delete | ~1 read per own post change
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const posts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setUserPosts(posts);
-      setStats(prev => ({ ...prev, posts: posts.length }));
+      setLoading(false);
+    }, (err) => {
+      console.log('Error fetching user posts:', err.message);
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, [currentUser]);
 
+  const mediaPosts = userPosts.filter(p => p.imageUrl || p.videoUrl);
+
   return (
     <div className="app-shell">
-      <Navbar />
-      <main className="content">
-        <Topbar title="Profile" subtitle="Your creator space" />
+      <Navbar onOpenComposer={() => setComposerOpen(true)} />
 
-        <div className="profile-header" style={{
-          background: 'linear-gradient(135deg, rgba(99,102,241,0.3), rgba(139,92,246,0.2))',
-          borderRadius: '20px', padding: '30px', marginBottom: '20px', position: 'relative'
-        }}>
-          <div style={{ display: 'flex', gap: '20px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <Avatar src={userProfile?.avatar} alt={userProfile?.name} size="large" />
-            <div>
-              <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0 }}>{userProfile?.name || 'Creator'}</h2>
-              <p style={{ color: 'rgba(255,255,255,0.5)', margin: '4px 0' }}>{userProfile?.handle || '@user'}</p>
-              <p style={{ margin: '8px 0 0', maxWidth: '400px', lineHeight: 1.5 }}>
-                {userProfile?.bio || 'Digital creator on ORION Social.'}
-              </p>
-            </div>
+      <main className="content">
+        <Topbar title="Profile" subtitle="Personal creator space" />
+
+        {/* Cinematic Profile Header */}
+        <section className="profile-page-header" style={{ position: 'relative', overflow: 'hidden' }}>
+          <Avatar src={userProfile?.avatar} alt={userProfile?.name} size="large" />
+          
+          <div>
+            <h2>{userProfile?.name || 'Creator'}</h2>
+            <span className="handle">{userProfile?.handle || '@creator'}</span>
           </div>
 
-          <div className="profile-stats" style={{
-            display: 'flex', gap: '30px', marginTop: '20px', paddingTop: '20px',
-            borderTop: '1px solid rgba(255,255,255,0.1)'
-          }}>
-            <div style={{ textAlign: 'center' }}>
-              <b style={{ fontSize: '20px', display: 'block' }}>{stats.posts}</b>
-              <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '13px' }}>Posts</span>
+          <p className="bio">
+            {userProfile?.bio || 'Digital creator building worlds and sharing visions on ORION Social.'}
+          </p>
+
+          <div className="profile-stats-grid">
+            <div>
+              <b>{userPosts.length}</b>
+              <span>Posts</span>
             </div>
-            <div style={{ textAlign: 'center' }}>
-              <b style={{ fontSize: '20px', display: 'block' }}>{stats.followers}</b>
-              <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '13px' }}>Followers</span>
+            <div>
+              <b>{userProfile?.followersCount || 0}</b>
+              <span>Followers</span>
             </div>
-            <div style={{ textAlign: 'center' }}>
-              <b style={{ fontSize: '20px', display: 'block' }}>{stats.following}</b>
-              <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '13px' }}>Following</span>
+            <div>
+              <b>{userProfile?.followingCount || 0}</b>
+              <span>Following</span>
             </div>
+          </div>
+        </section>
+
+        {/* Profile Tabs */}
+        <div className="feed-tools" style={{ marginTop: '4px' }}>
+          <div className="tabs" role="tablist">
+            <button
+              className={activeTab === 'posts' ? 'active' : ''}
+              onClick={() => setActiveTab('posts')}
+              type="button"
+            >
+              <i className="fa-solid fa-layer-group" style={{ marginRight: '6px' }}></i> All Posts ({userPosts.length})
+            </button>
+            <button
+              className={activeTab === 'media' ? 'active' : ''}
+              onClick={() => setActiveTab('media')}
+              type="button"
+            >
+              <i className="fa-solid fa-photo-film" style={{ marginRight: '6px' }}></i> Media ({mediaPosts.length})
+            </button>
           </div>
         </div>
 
-        <h3 style={{ margin: '20px 0 15px', fontSize: '18px' }}>Your Posts</h3>
-
-        <section className="feed-list">
+        {/* Posts Feed or Media */}
+        <section className="feed-list" style={{ marginTop: '16px' }}>
           {loading ? (
-            <article className="post"><div className="post-copy"><b>Loading your posts...</b></div></article>
-          ) : userPosts.length > 0 ? (
-            userPosts.map(post => <PostCard key={post.id} post={post} />)
+            <>
+              <PostSkeleton />
+              <PostSkeleton />
+            </>
+          ) : (activeTab === 'posts' ? userPosts : mediaPosts).length > 0 ? (
+            (activeTab === 'posts' ? userPosts : mediaPosts).map(post => (
+              <PostCard key={post.id} post={post} />
+            ))
           ) : (
-            <article className="post">
-              <div className="post-copy">
-                <b>No posts yet</b>
-                <p>Create your first post to get started!</p>
-              </div>
-            </article>
+            <div style={{
+              padding: '48px 24px',
+              textAlign: 'center',
+              background: 'var(--surface)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-lg)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '12px'
+            }}>
+              <i className="fa-solid fa-cloud-arrow-up" style={{ fontSize: '2rem', color: 'var(--primary)' }}></i>
+              <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 700 }}>No {activeTab} yet</h3>
+              <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.88rem' }}>
+                Your published {activeTab === 'posts' ? 'updates' : 'photos and clips'} will show up here.
+              </p>
+              <button
+                onClick={() => setComposerOpen(true)}
+                type="button"
+                style={{
+                  marginTop: '8px',
+                  padding: '8px 20px',
+                  borderRadius: 'var(--radius-full)',
+                  border: 'none',
+                  background: 'var(--primary)',
+                  color: '#ffffff',
+                  fontWeight: 700,
+                  fontSize: '0.85rem',
+                  cursor: 'pointer'
+                }}
+              >
+                Create Post
+              </button>
+            </div>
           )}
         </section>
       </main>
+
+      <ComposerModal isOpen={composerOpen} onClose={() => setComposerOpen(false)} />
+      <MobileNav onOpenComposer={() => setComposerOpen(true)} />
     </div>
   );
 }

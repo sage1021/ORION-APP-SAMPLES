@@ -25,6 +25,7 @@ export default function PostCard({ post, onOpenComments }) {
   const [likesCount, setLikesCount] = useState(post.likesCount || post.likes || 0);
   const [saved, setSaved] = useState(post.isSavedByCurrentUser || false);
   const [isLiking, setIsLiking] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   // Optimistic Like Handler
   async function handleToggleLike() {
@@ -34,7 +35,6 @@ export default function PostCard({ post, onOpenComments }) {
     const prevLiked = liked;
     const prevCount = likesCount;
 
-    // 1. Optimistic Update
     setLiked(!prevLiked);
     setLikesCount(prevLiked ? Math.max(0, prevCount - 1) : prevCount + 1);
 
@@ -51,7 +51,6 @@ export default function PostCard({ post, onOpenComments }) {
       }
     } catch (err) {
       console.error("Error toggling like:", err);
-      // Revert on error
       setLiked(prevLiked);
       setLikesCount(prevCount);
     } finally {
@@ -78,18 +77,44 @@ export default function PostCard({ post, onOpenComments }) {
     }
   }
 
+  // Share link handler
+  function handleShare() {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.origin + '/#post-' + post.id);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }
+
   return (
-    <article className="post" data-post-id={post.id}>
-      <div className="post-header">
+    <article className="post" id={`post-${post.id}`} data-post-id={post.id}>
+      <header className="post-header">
         <div className="profile-line">
           <Avatar src={post.userAvatar || post.avatar} alt={post.userName || post.user} />
           <div>
             <b>{post.userName || post.user || "Creator"}</b>
-            <span>{post.handle || "@user"} - {timeAgo(post.createdAt)}</span>
+            <span>{post.handle || "@creator"} • {timeAgo(post.createdAt)}</span>
           </div>
         </div>
-      </div>
 
+        <button 
+          className="icon-button" 
+          style={{ width: '32px', height: '32px', border: 'none', background: 'transparent' }}
+          type="button"
+          title="More options"
+        >
+          <i className="fa-solid fa-ellipsis" style={{ fontSize: '0.9rem', color: 'var(--muted)' }}></i>
+        </button>
+      </header>
+
+      {/* Post Text Content */}
+      {post.text && (
+        <div className="post-copy" style={{ paddingTop: '2px', paddingBottom: '8px' }}>
+          <p style={{ margin: 0 }}>{post.text}</p>
+        </div>
+      )}
+
+      {/* Media Attachments */}
       {post.imageUrl && (
         <div className="media-frame">
           <img src={post.imageUrl} alt="Post content" loading="lazy" />
@@ -98,49 +123,70 @@ export default function PostCard({ post, onOpenComments }) {
 
       {post.videoUrl && (
         <div className="media-frame">
-          <video src={post.videoUrl} controls preload="metadata" style={{ width: '100%', borderRadius: '12px' }} />
+          <video src={post.videoUrl} controls preload="metadata" style={{ width: '100%' }} />
         </div>
       )}
 
+      {/* Action Bar */}
       <div className="post-actions">
         <div className="action-group">
           <button 
             className={`like-button ${liked ? "liked" : ""}`} 
             onClick={handleToggleLike} 
             type="button" 
-            title="Like"
+            title={liked ? "Unlike" : "Like"}
+            aria-label="Like post"
           >
             <i className={`${liked ? "fa-solid" : "fa-regular"} fa-heart`}></i>
           </button>
+          
           <button 
             className="comment-button" 
             onClick={() => onOpenComments && onOpenComments(post.id)} 
             type="button" 
             title="Comment"
+            aria-label="Comment on post"
           >
             <i className="fa-regular fa-comment"></i>
           </button>
-          <button className="share-button" type="button" title="Share">
-            <i className="fa-regular fa-paper-plane"></i>
+
+          <button 
+            className="share-button" 
+            onClick={handleShare}
+            type="button" 
+            title={copied ? "Link copied!" : "Share post"}
+            aria-label="Share post"
+          >
+            <i className={copied ? "fa-solid fa-check" : "fa-regular fa-paper-plane"} style={{ color: copied ? 'var(--success)' : 'inherit' }}></i>
           </button>
         </div>
+
         <button 
           className={`save-button ${saved ? "saved" : ""}`} 
           onClick={handleToggleSave} 
           type="button" 
-          title="Save"
+          title={saved ? "Remove bookmark" : "Save bookmark"}
+          aria-label="Save post"
         >
           <i className={`${saved ? "fa-solid" : "fa-regular"} fa-bookmark`}></i>
         </button>
       </div>
 
+      {/* Metadata & Tags */}
       <div className="post-copy">
-        <b className="meta">
-          {formatCount(likesCount)} likes - {formatCount(post.commentsCount || 0)} comments
-        </b>
-        <p>
-          <b>{post.userName || post.user}</b> {post.text}
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+          <span className="meta" style={{ margin: 0 }}>
+            {formatCount(likesCount)} {likesCount === 1 ? 'like' : 'likes'}
+          </span>
+          <span style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>•</span>
+          <span 
+            style={{ color: 'var(--muted)', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600 }}
+            onClick={() => onOpenComments && onOpenComments(post.id)}
+          >
+            {formatCount(post.commentsCount || 0)} {post.commentsCount === 1 ? 'comment' : 'comments'}
+          </span>
+        </div>
+
         {post.tags && post.tags.length > 0 && (
           <div className="tag-row">
             {post.tags.map((tag, idx) => (

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, orderBy, onSnapshot, doc, updateDoc, writeBatch } from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useAuth } from '../hooks/useAuth';
 import Navbar from '../components/layout/Navbar';
 import Topbar from '../components/layout/Topbar';
 import Sidebar from '../components/layout/Sidebar';
 import Avatar from '../components/common/Avatar';
+import MobileNav from '../components/layout/MobileNav';
 
 export default function Activity() {
   const { currentUser } = useAuth();
@@ -70,13 +71,13 @@ export default function Activity() {
   function getActivityIcon(type) {
     switch (type) {
       case 'like':
-        return <i className="fa-solid fa-heart" style={{ color: '#ef4444' }}></i>;
+        return <i className="fa-solid fa-heart" style={{ color: 'var(--danger)' }}></i>;
       case 'comment':
-        return <i className="fa-solid fa-comment-dots" style={{ color: '#6366f1' }}></i>;
+        return <i className="fa-solid fa-comment-dots" style={{ color: 'var(--primary)' }}></i>;
       case 'follow':
-        return <i className="fa-solid fa-user-plus" style={{ color: '#10b981' }}></i>;
+        return <i className="fa-solid fa-user-plus" style={{ color: 'var(--success)' }}></i>;
       case 'mention':
-        return <i className="fa-solid fa-at" style={{ color: '#deb887' }}></i>;
+        return <i className="fa-solid fa-at" style={{ color: 'var(--accent)' }}></i>;
       default:
         return <i className="fa-solid fa-bell" style={{ color: 'var(--primary)' }}></i>;
     }
@@ -97,7 +98,7 @@ export default function Activity() {
         {/* Action Header & Tabs */}
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          flexWrap: 'wrap', gap: '14px', margin: '20px 0 16px'
+          flexWrap: 'wrap', gap: '14px', margin: '18px 0 14px'
         }}>
           <div className="tabs" role="tablist">
             {[
@@ -123,9 +124,9 @@ export default function Activity() {
               onClick={markAllAsRead}
               type="button"
               style={{
-                background: 'rgba(222, 184, 135, 0.15)', border: '1px solid rgba(222, 184, 135, 0.4)',
-                color: 'var(--primary)', padding: '6px 14px', borderRadius: '8px',
-                fontSize: '13px', fontWeight: 700, cursor: 'pointer'
+                background: 'var(--primary-soft)', border: '1px solid var(--border)',
+                color: 'var(--primary)', padding: '6px 14px', borderRadius: 'var(--radius-full)',
+                fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer'
               }}
             >
               <i className="fa-solid fa-check-double" style={{ marginRight: '6px' }}></i>
@@ -137,7 +138,7 @@ export default function Activity() {
         {/* Activity List Container */}
         <div style={{
           background: 'var(--surface)', border: '1px solid var(--border)',
-          borderRadius: '12px', overflow: 'hidden', boxShadow: 'var(--shadow)'
+          borderRadius: 'var(--radius-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-sm)'
         }}>
           {filteredActivities.length > 0 ? (
             filteredActivities.map((act, index) => {
@@ -148,10 +149,10 @@ export default function Activity() {
                   key={act.id}
                   style={{
                     display: 'flex', alignItems: 'center', gap: '14px',
-                    padding: '16px 20px',
+                    padding: '14px 18px',
                     borderBottom: index !== filteredActivities.length - 1 ? '1px solid var(--border)' : 'none',
-                    background: act.read ? 'transparent' : 'rgba(222, 184, 135, 0.06)',
-                    transition: 'background 0.2s ease'
+                    background: act.read ? 'transparent' : 'var(--primary-soft)',
+                    transition: 'background 0.15s ease'
                   }}
                 >
                   {/* Avatar with Type Icon Badge */}
@@ -162,7 +163,7 @@ export default function Activity() {
                       background: 'var(--surface)', borderRadius: '50%',
                       width: '20px', height: '20px', display: 'flex',
                       alignItems: 'center', justifyContent: 'center',
-                      fontSize: '11px', boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+                      fontSize: '11px', boxShadow: 'var(--shadow-sm)'
                     }}>
                       {getActivityIcon(act.type)}
                     </div>
@@ -170,12 +171,12 @@ export default function Activity() {
 
                   {/* Activity Details */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ margin: 0, fontSize: '14px', lineHeight: 1.4 }}>
+                    <p style={{ margin: 0, fontSize: '0.9rem', lineHeight: 1.4 }}>
                       <b style={{ color: 'var(--text)' }}>{act.userName} </b>
-                      <span style={{ color: 'var(--muted)' }}>{act.targetText}</span>
+                      <span style={{ color: 'var(--text-secondary)' }}>{act.targetText}</span>
                     </p>
-                    <span style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '4px', display: 'block' }}>
-                      {act.time}
+                    <span style={{ fontSize: '0.78rem', color: 'var(--muted)', marginTop: '2px', display: 'block' }}>
+                      {act.time || 'recent'}
                     </span>
                   </div>
 
@@ -184,13 +185,7 @@ export default function Activity() {
                     <button
                       onClick={() => toggleFollowBack(act.id)}
                       type="button"
-                      style={{
-                        padding: '6px 14px', borderRadius: '8px',
-                        border: isFollowing ? '1px solid var(--border)' : 'none',
-                        background: isFollowing ? 'var(--surface-soft)' : 'var(--primary)',
-                        color: isFollowing ? 'var(--text)' : '#fff',
-                        fontSize: '12px', fontWeight: 700, cursor: 'pointer'
-                      }}
+                      className={`follow-btn ${isFollowing ? 'following' : ''}`}
                     >
                       {isFollowing ? 'Following' : 'Follow Back'}
                     </button>
@@ -199,7 +194,7 @@ export default function Activity() {
                       src={act.mediaPreview}
                       alt="Thumbnail"
                       style={{
-                        width: '44px', height: '44px', borderRadius: '8px',
+                        width: '42px', height: '42px', borderRadius: 'var(--radius-sm)',
                         objectFit: 'cover', border: '1px solid var(--border)'
                       }}
                     />
@@ -208,11 +203,11 @@ export default function Activity() {
               );
             })
           ) : (
-            <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--muted)' }}>
-              <i className="fa-regular fa-bell-slash" style={{ fontSize: '36px', marginBottom: '12px', display: 'block' }}></i>
-              <b>No notifications to display</b>
-              <p style={{ margin: '6px 0 0', fontSize: '13px' }}>
-                {searchVal ? 'No activity matches your search filter.' : 'When someone interacts with your posts, you will see it here.'}
+            <div style={{ padding: '48px 20px', textAlign: 'center', color: 'var(--muted)' }}>
+              <i className="fa-regular fa-bell-slash" style={{ fontSize: '2rem', marginBottom: '12px', display: 'block', color: 'var(--primary)' }}></i>
+              <b style={{ fontSize: '1rem', color: 'var(--text)' }}>No notifications to display</b>
+              <p style={{ margin: '6px 0 0', fontSize: '0.88rem' }}>
+                {searchVal ? 'No activity matches your search filter.' : 'When creators interact with your posts or follow you, updates will show up here.'}
               </p>
             </div>
           )}
@@ -220,6 +215,7 @@ export default function Activity() {
       </main>
 
       <Sidebar />
+      <MobileNav />
     </div>
   );
 }

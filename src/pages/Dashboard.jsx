@@ -4,6 +4,7 @@ import Navbar from '../components/layout/Navbar';
 import Topbar from '../components/layout/Topbar';
 import Sidebar from '../components/layout/Sidebar';
 import Avatar from '../components/common/Avatar';
+import MobileNav from '../components/layout/MobileNav';
 
 export default function Dashboard() {
   const { userProfile } = useAuth();
@@ -44,23 +45,23 @@ export default function Dashboard() {
       <main className="content">
         <Topbar
           title="Creator Studio"
-          subtitle="Real-time analytics & performance"
+          subtitle="Real-time telemetry & analytics"
         />
 
         {/* Dashboard Header Filter Row */}
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          flexWrap: 'wrap', gap: '14px', margin: '20px 0'
+          flexWrap: 'wrap', gap: '14px', margin: '18px 0'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <Avatar src={userProfile?.avatar} size="medium" />
             <div>
-              <b style={{ fontSize: '16px', display: 'block' }}>{userProfile?.name || 'Creator Studio'}</b>
-              <span style={{ fontSize: '12px', color: 'var(--muted)' }}>Overview & Insights</span>
+              <b style={{ fontSize: '1rem', display: 'block' }}>{userProfile?.name || 'Creator Studio'}</b>
+              <span style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Live Audience Telemetry</span>
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div className="tabs" role="tablist">
             {[
               { id: '7', label: '7 Days' },
               { id: '30', label: '30 Days' },
@@ -70,14 +71,8 @@ export default function Dashboard() {
               <button
                 key={r.id}
                 type="button"
+                className={timeRange === r.id ? 'active' : ''}
                 onClick={() => setTimeRange(r.id)}
-                style={{
-                  padding: '6px 14px', borderRadius: '8px',
-                  border: '1px solid var(--border)',
-                  background: timeRange === r.id ? 'var(--primary)' : 'var(--surface)',
-                  color: timeRange === r.id ? '#fff' : 'var(--text)',
-                  fontSize: '12px', fontWeight: 700, cursor: 'pointer'
-                }}
               >
                 {r.label}
               </button>
@@ -88,66 +83,63 @@ export default function Dashboard() {
         {/* KPI Cards Grid */}
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '16px', marginBottom: '24px'
+          gap: '14px', marginBottom: '20px'
         }}>
           {/* Card 1: Followers */}
-          <div style={kpiCardStyle}>
+          <div className="panel" style={{ padding: '16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '13px', color: 'var(--muted)', fontWeight: 600 }}>Total Followers</span>
+              <span style={{ fontSize: '0.82rem', color: 'var(--muted)', fontWeight: 600 }}>Total Followers</span>
               <div style={iconBadgeStyle}><i className="fa-solid fa-users" style={{ color: 'var(--primary)' }}></i></div>
             </div>
-            <h3 style={{ fontSize: '26px', fontWeight: 800, margin: '8px 0 4px' }}>{stats.followers}</h3>
-            <span style={{ fontSize: '12px', color: '#10b981', fontWeight: 700 }}>
-              <i className="fa-solid fa-arrow-trend-up" style={{ marginRight: '4px' }}></i>{stats.followersGrowth} this month
+            <h3 style={{ fontSize: '1.6rem', fontWeight: 800, margin: '8px 0 4px' }}>{stats.followers}</h3>
+            <span style={{ fontSize: '0.78rem', color: 'var(--success)', fontWeight: 600 }}>
+              <i className="fa-solid fa-arrow-trend-up" style={{ marginRight: '4px' }}></i>{stats.followersGrowth}
             </span>
           </div>
 
           {/* Card 2: Views */}
-          <div style={kpiCardStyle}>
+          <div className="panel" style={{ padding: '16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '13px', color: 'var(--muted)', fontWeight: 600 }}>Impressions / Reach</span>
-              <div style={iconBadgeStyle}><i className="fa-solid fa-eye" style={{ color: '#6366f1' }}></i></div>
+              <span style={{ fontSize: '0.82rem', color: 'var(--muted)', fontWeight: 600 }}>Impressions / Reach</span>
+              <div style={iconBadgeStyle}><i className="fa-solid fa-eye" style={{ color: 'var(--accent)' }}></i></div>
             </div>
-            <h3 style={{ fontSize: '26px', fontWeight: 800, margin: '8px 0 4px' }}>{stats.views}</h3>
-            <span style={{ fontSize: '12px', color: '#10b981', fontWeight: 700 }}>
-              <i className="fa-solid fa-arrow-trend-up" style={{ marginRight: '4px' }}></i>{stats.viewsGrowth} vs last cycle
+            <h3 style={{ fontSize: '1.6rem', fontWeight: 800, margin: '8px 0 4px' }}>{stats.views}</h3>
+            <span style={{ fontSize: '0.78rem', color: 'var(--success)', fontWeight: 600 }}>
+              <i className="fa-solid fa-arrow-trend-up" style={{ marginRight: '4px' }}></i>{stats.viewsGrowth}
             </span>
           </div>
 
           {/* Card 3: Engagement */}
-          <div style={kpiCardStyle}>
+          <div className="panel" style={{ padding: '16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '13px', color: 'var(--muted)', fontWeight: 600 }}>Engagement Rate</span>
-              <div style={iconBadgeStyle}><i className="fa-solid fa-bolt" style={{ color: '#deb887' }}></i></div>
+              <span style={{ fontSize: '0.82rem', color: 'var(--muted)', fontWeight: 600 }}>Engagement Rate</span>
+              <div style={iconBadgeStyle}><i className="fa-solid fa-bolt" style={{ color: 'var(--accent-cyan)' }}></i></div>
             </div>
-            <h3 style={{ fontSize: '26px', fontWeight: 800, margin: '8px 0 4px' }}>{stats.engagement}</h3>
-            <span style={{ fontSize: '12px', color: '#10b981', fontWeight: 700 }}>
-              <i className="fa-solid fa-arrow-trend-up" style={{ marginRight: '4px' }}></i>{stats.engagementGrowth} above average
+            <h3 style={{ fontSize: '1.6rem', fontWeight: 800, margin: '8px 0 4px' }}>{stats.engagement}</h3>
+            <span style={{ fontSize: '0.78rem', color: 'var(--success)', fontWeight: 600 }}>
+              <i className="fa-solid fa-arrow-trend-up" style={{ marginRight: '4px' }}></i>{stats.engagementGrowth}
             </span>
           </div>
 
           {/* Card 4: Creator Points */}
-          <div style={kpiCardStyle}>
+          <div className="panel" style={{ padding: '16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '13px', color: 'var(--muted)', fontWeight: 600 }}>Creator Points</span>
-              <div style={iconBadgeStyle}><i className="fa-solid fa-coins" style={{ color: '#f59e0b' }}></i></div>
+              <span style={{ fontSize: '0.82rem', color: 'var(--muted)', fontWeight: 600 }}>Creator Points</span>
+              <div style={iconBadgeStyle}><i className="fa-solid fa-coins" style={{ color: 'var(--gold)' }}></i></div>
             </div>
-            <h3 style={{ fontSize: '26px', fontWeight: 800, margin: '8px 0 4px' }}>{stats.points}</h3>
-            <span style={{ fontSize: '12px', color: 'var(--primary)', fontWeight: 700 }}>
-              <i className="fa-solid fa-gift" style={{ marginRight: '4px' }}></i>{stats.pointsGrowth} earned
+            <h3 style={{ fontSize: '1.6rem', fontWeight: 800, margin: '8px 0 4px' }}>{stats.points}</h3>
+            <span style={{ fontSize: '0.78rem', color: 'var(--primary)', fontWeight: 600 }}>
+              <i className="fa-solid fa-gift" style={{ marginRight: '4px' }}></i>{stats.pointsGrowth}
             </span>
           </div>
         </div>
 
         {/* Analytics Growth Chart */}
-        <div style={{
-          background: 'var(--surface)', border: '1px solid var(--border)',
-          borderRadius: '12px', padding: '20px', marginBottom: '24px', boxShadow: 'var(--shadow)'
-        }}>
+        <div className="panel" style={{ padding: '20px', marginBottom: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
             <div>
-              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700 }}>Audience Growth & Traffic</h3>
-              <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--muted)' }}>Aggregated telemetry over {timeRange} days</p>
+              <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700 }}>Audience Growth</h3>
+              <p style={{ margin: '2px 0 0', fontSize: '0.78rem', color: 'var(--muted)' }}>Aggregated telemetry over {timeRange} days</p>
             </div>
             <div className="tabs" role="tablist">
               {[
@@ -168,30 +160,27 @@ export default function Dashboard() {
           </div>
 
           {/* Responsive SVG Line Chart */}
-          <div style={{ width: '100%', height: '160px', position: 'relative' }}>
+          <div style={{ width: '100%', height: '150px', position: 'relative' }}>
             <svg viewBox="0 0 500 150" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
               <defs>
                 <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#deb887" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="#deb887" stopOpacity="0.0" />
+                  <stop offset="0%" stopColor="#6366f1" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#6366f1" stopOpacity="0.0" />
                 </linearGradient>
               </defs>
-              {/* Horizontal Grid lines */}
-              <line x1="0" y1="30" x2="500" y2="30" stroke="rgba(255,255,255,0.08)" strokeDasharray="4" />
-              <line x1="0" y1="80" x2="500" y2="80" stroke="rgba(255,255,255,0.08)" strokeDasharray="4" />
-              <line x1="0" y1="130" x2="500" y2="130" stroke="rgba(255,255,255,0.08)" strokeDasharray="4" />
+              <line x1="0" y1="30" x2="500" y2="30" stroke="var(--border)" strokeDasharray="4" />
+              <line x1="0" y1="80" x2="500" y2="80" stroke="var(--border)" strokeDasharray="4" />
+              <line x1="0" y1="130" x2="500" y2="130" stroke="var(--border)" strokeDasharray="4" />
               
-              {/* Filled Area */}
               <polygon
                 points={`0,150 ${points} 500,150`}
                 fill="url(#chartGradient)"
               />
               
-              {/* Trend Line */}
               <polyline
                 fill="none"
                 stroke="var(--primary)"
-                strokeWidth="3"
+                strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 points={points}
@@ -200,81 +189,30 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Top Performing Content Section */}
-        <div style={{
-          background: 'var(--surface)', border: '1px solid var(--border)',
-          borderRadius: '12px', padding: '20px', boxShadow: 'var(--shadow)'
-        }}>
-          <h3 style={{ margin: '0 0 16px', fontSize: '16px', fontWeight: 700 }}>Top Performing Content</h3>
+        {/* Content Performance Section */}
+        <div className="panel" style={{ padding: '20px' }}>
+          <h3 style={{ margin: '0 0 14px', fontSize: '1rem', fontWeight: 700 }}>Top Performing Content</h3>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {topPosts.length > 0 ? (
-              topPosts.map(post => (
-                <div
-                  key={post.id}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: '14px',
-                    padding: '12px', borderRadius: '8px', background: 'var(--surface-soft)',
-                    border: '1px solid var(--border)'
-                  }}
-                >
-                  <img
-                    src={post.thumbnail}
-                    alt={post.title}
-                    style={{ width: '48px', height: '48px', borderRadius: '8px', objectFit: 'cover' }}
-                  />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <b style={{ fontSize: '14px', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {post.title}
-                    </b>
-                    <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: 'var(--muted)', marginTop: '4px' }}>
-                      <span>{post.type}</span>
-                      <span>•</span>
-                      <span>{post.date}</span>
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'flex', gap: '16px', alignItems: 'center', textAlign: 'right' }}>
-                    <div>
-                      <b style={{ fontSize: '14px', color: 'var(--text)', display: 'block' }}>{post.views}</b>
-                      <span style={{ fontSize: '11px', color: 'var(--muted)' }}>Views</span>
-                    </div>
-                    <div>
-                      <b style={{ fontSize: '14px', color: '#ef4444', display: 'block' }}>{post.likes}</b>
-                      <span style={{ fontSize: '11px', color: 'var(--muted)' }}>Likes</span>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--muted)', fontSize: '13px' }}>
-                No published content yet. Create your first post or reel to track performance analytics!
-              </div>
-            )}
+          <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--muted)', fontSize: '0.86rem' }}>
+            <i className="fa-solid fa-chart-simple" style={{ fontSize: '1.6rem', marginBottom: '8px', display: 'block', color: 'var(--primary)' }}></i>
+            No published content yet. Create posts and reels to track performance metrics!
           </div>
         </div>
       </main>
 
       <Sidebar />
+      <MobileNav />
     </div>
   );
 }
 
-const kpiCardStyle = {
-  background: 'var(--surface)',
-  border: '1px solid var(--border)',
-  borderRadius: '12px',
-  padding: '18px',
-  boxShadow: 'var(--shadow)'
-};
-
 const iconBadgeStyle = {
-  width: '34px',
-  height: '34px',
-  borderRadius: '8px',
+  width: '32px',
+  height: '32px',
+  borderRadius: 'var(--radius-sm)',
   background: 'var(--surface-soft)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: '14px'
+  fontSize: '0.85rem'
 };

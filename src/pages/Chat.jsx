@@ -4,7 +4,9 @@ import { collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp 
 import { db } from '../lib/firebase';
 import { useAuth } from '../hooks/useAuth';
 import Navbar from '../components/layout/Navbar';
+import Topbar from '../components/layout/Topbar';
 import Avatar from '../components/common/Avatar';
+import MobileNav from '../components/layout/MobileNav';
 
 export default function Chat() {
   const { currentUser, userProfile } = useAuth();
@@ -52,7 +54,6 @@ export default function Chat() {
       orderBy('timestamp', 'asc')
     );
 
-    // Listener: Chat Messages | Triggers on new message | ~1 read per message
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const msgs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setMessages(msgs);
@@ -85,115 +86,115 @@ export default function Chat() {
 
   function getOtherParticipantName(chat) {
     return chat.participantNames
-      ? chat.participantNames.find((_, i) => chat.participants[i] !== currentUser.uid) || 'User'
-      : 'User';
+      ? chat.participantNames.find((_, i) => chat.participants[i] !== currentUser.uid) || 'Creator'
+      : 'Creator';
   }
 
   return (
-    <div className="app-shell">
+    <div className="app-shell" style={{ gridTemplateColumns: '248px minmax(0, 1fr)' }}>
       <Navbar />
-      <main className="content" style={{ display: 'flex', gap: 0, padding: 0, overflow: 'hidden', height: '100vh' }}>
-        {/* Chat List */}
-        <div style={{
-          width: '320px', minWidth: '320px', borderRight: '1px solid rgba(255,255,255,0.08)',
-          display: 'flex', flexDirection: 'column', background: 'rgba(255,255,255,0.02)'
-        }}>
-          <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 700, margin: 0 }}>Messages</h2>
-          </div>
-          <div style={{ flex: 1, overflowY: 'auto' }}>
-            {chats.length > 0 ? chats.map(chat => (
-              <button
-                key={chat.id}
-                onClick={() => setActiveChat(chat)}
-                type="button"
-                style={{
-                  width: '100%', display: 'flex', gap: '12px', alignItems: 'center',
-                  padding: '15px 20px', border: 'none', cursor: 'pointer', textAlign: 'left',
-                  background: activeChat?.id === chat.id ? 'rgba(99,102,241,0.15)' : 'transparent',
-                  color: 'inherit', transition: '0.2s'
-                }}
-              >
-                <Avatar src={null} size="small" />
-                <div>
-                  <b style={{ fontSize: '14px' }}>{getOtherParticipantName(chat)}</b>
-                  <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', margin: '3px 0 0' }}>
-                    {chat.lastMessage || 'Start a conversation'}
-                  </p>
+      
+      <main className="content">
+        <Topbar title="Messages" subtitle="Real-time encrypted direct messaging" />
+
+        <div className="chat-layout" style={{ marginTop: '12px' }}>
+          {/* Chat List Sidebar */}
+          <div className="chat-list">
+            <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--border)' }}>
+              <h2 style={{ fontSize: '0.95rem', fontWeight: 700, margin: 0 }}>Conversations</h2>
+            </div>
+            
+            <div>
+              {chats.length > 0 ? chats.map(chat => (
+                <div
+                  key={chat.id}
+                  onClick={() => setActiveChat(chat)}
+                  className={`chat-list-item ${activeChat?.id === chat.id ? 'active' : ''}`}
+                >
+                  <Avatar src={null} size="small" />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <b style={{ fontSize: '0.9rem', color: 'var(--text)', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {getOtherParticipantName(chat)}
+                    </b>
+                    <p style={{ fontSize: '0.78rem', color: 'var(--muted)', margin: '2px 0 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {chat.lastMessage || 'Direct message thread'}
+                    </p>
+                  </div>
                 </div>
-              </button>
-            )) : (
-              <p style={{ padding: '20px', color: 'rgba(255,255,255,0.4)', fontSize: '14px', textAlign: 'center' }}>
-                No conversations yet
-              </p>
+              )) : (
+                <p style={{ padding: '24px 16px', color: 'var(--muted)', fontSize: '0.86rem', textAlign: 'center', margin: 0 }}>
+                  No conversations yet.<br />Message creators from the feed!
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Active Chat Thread */}
+          <div className="chat-thread">
+            {activeChat ? (
+              <>
+                <div style={{
+                  padding: '12px 20px', borderBottom: '1px solid var(--border)',
+                  display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--surface-soft)'
+                }}>
+                  <Avatar src={null} size="small" />
+                  <div>
+                    <b style={{ fontSize: '0.94rem', color: 'var(--text)' }}>{getOtherParticipantName(activeChat)}</b>
+                    <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--success)' }}>● Active Now</span>
+                  </div>
+                </div>
+
+                <div className="chat-messages">
+                  {messages.map(msg => {
+                    const isMine = msg.senderUid === currentUser.uid;
+                    return (
+                      <div
+                        key={msg.id}
+                        className={`chat-bubble ${isMine ? 'mine' : 'theirs'}`}
+                      >
+                        {msg.text}
+                      </div>
+                    );
+                  })}
+                  <div ref={messagesEndRef} />
+                </div>
+
+                <form onSubmit={handleSend} className="chat-input-bar">
+                  <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type a message..."
+                    aria-label="Message text"
+                  />
+                  <button type="submit" disabled={sending} aria-label="Send message">
+                    <i className="fa-solid fa-paper-plane"></i>
+                  </button>
+                </form>
+              </>
+            ) : (
+              <div style={{
+                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexDirection: 'column', gap: '12px', color: 'var(--muted)', padding: '24px', textAlign: 'center'
+              }}>
+                <div style={{
+                  width: '56px', height: '56px', borderRadius: '50%',
+                  background: 'var(--surface-soft)', display: 'grid', placeItems: 'center',
+                  fontSize: '1.4rem', color: 'var(--primary)'
+                }}>
+                  <i className="fa-regular fa-paper-plane"></i>
+                </div>
+                <h3 style={{ margin: 0, color: 'var(--text)', fontSize: '1.05rem', fontWeight: 700 }}>Select a Conversation</h3>
+                <p style={{ margin: 0, fontSize: '0.86rem', maxWidth: '280px' }}>
+                  Choose an existing conversation or start a new chat with creators on ORION.
+                </p>
+              </div>
             )}
           </div>
         </div>
-
-        {/* Active Chat */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          {activeChat ? (
-            <>
-              <div style={{
-                padding: '15px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)',
-                display: 'flex', alignItems: 'center', gap: '12px'
-              }}>
-                <Avatar src={null} size="small" />
-                <b>{getOtherParticipantName(activeChat)}</b>
-              </div>
-
-              <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {messages.map(msg => (
-                  <div
-                    key={msg.id}
-                    style={{
-                      alignSelf: msg.senderUid === currentUser.uid ? 'flex-end' : 'flex-start',
-                      background: msg.senderUid === currentUser.uid
-                        ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.08)',
-                      padding: '10px 16px', borderRadius: '16px', maxWidth: '70%',
-                      fontSize: '14px', lineHeight: 1.5
-                    }}
-                  >
-                    {msg.text}
-                  </div>
-                ))}
-                <div ref={messagesEndRef} />
-              </div>
-
-              <form onSubmit={handleSend} style={{
-                padding: '15px 20px', borderTop: '1px solid rgba(255,255,255,0.08)',
-                display: 'flex', gap: '10px'
-              }}>
-                <input
-                  type="text" value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder="Type a message..."
-                  style={{
-                    flex: 1, padding: '12px 16px', borderRadius: '12px',
-                    border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)',
-                    color: '#fff', fontSize: '14px', outline: 'none'
-                  }}
-                />
-                <button type="submit" disabled={sending} style={{
-                  padding: '12px 20px', borderRadius: '12px', border: 'none',
-                  background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff',
-                  fontWeight: 600, cursor: 'pointer'
-                }}>
-                  <i className="fa-solid fa-paper-plane"></i>
-                </button>
-              </form>
-            </>
-          ) : (
-            <div style={{
-              flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              flexDirection: 'column', gap: '15px', color: 'rgba(255,255,255,0.3)'
-            }}>
-              <i className="fa-regular fa-paper-plane" style={{ fontSize: '48px' }}></i>
-              <p style={{ fontSize: '16px' }}>Select a conversation to start messaging</p>
-            </div>
-          )}
-        </div>
       </main>
+
+      <MobileNav />
     </div>
   );
 }

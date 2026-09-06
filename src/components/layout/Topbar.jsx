@@ -6,16 +6,16 @@ import UserCard from '../common/UserCard';
 
 export default function Topbar({ title = "Home", subtitle = "Live social canvas", searchVal = "", onSearchChange }) {
   const { currentUser } = useAuth();
-  const [isDark, setIsDark] = useState(() => localStorage.getItem("orion-theme") === "dark");
+  const [isDark, setIsDark] = useState(() => localStorage.getItem("orion-theme") !== "light");
   const [allUsers, setAllUsers] = useState([]);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
 
   useEffect(() => {
     if (isDark) {
-      document.body.classList.add("dark");
+      document.body.classList.remove("light");
       localStorage.setItem("orion-theme", "dark");
     } else {
-      document.body.classList.remove("dark");
+      document.body.classList.add("light");
       localStorage.setItem("orion-theme", "light");
     }
   }, [isDark]);
@@ -27,6 +27,8 @@ export default function Topbar({ title = "Home", subtitle = "Live social canvas"
         .map(doc => ({ uid: doc.id, ...doc.data() }))
         .filter(u => u.uid !== currentUser?.uid);
       setAllUsers(users);
+    }, (err) => {
+      console.log('Error fetching search users:', err.message);
     });
 
     return () => unsubscribe();
@@ -47,8 +49,8 @@ export default function Topbar({ title = "Home", subtitle = "Live social canvas"
       </div>
 
       <div style={{ position: 'relative', width: '100%' }}>
-        <label className="search">
-          <i className="fa-solid fa-magnifying-glass"></i>
+        <label className="search" htmlFor="searchInput">
+          <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
           <input
             id="searchInput"
             type="search"
@@ -59,28 +61,54 @@ export default function Topbar({ title = "Home", subtitle = "Live social canvas"
               setShowUserDropdown(true);
             }}
             onFocus={() => setShowUserDropdown(true)}
-            onBlur={() => setTimeout(() => setShowUserDropdown(false), 200)}
+            onBlur={() => setTimeout(() => setShowUserDropdown(false), 250)}
+            onKeyDown={(e) => e.key === 'Escape' && setShowUserDropdown(false)}
+            aria-label="Search"
           />
+          {searchVal && (
+            <button
+              type="button"
+              onClick={() => onSearchChange && onSearchChange('')}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--muted)',
+                cursor: 'pointer',
+                padding: '4px',
+                fontSize: '0.85rem'
+              }}
+              title="Clear search"
+            >
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+          )}
         </label>
 
-        {/* Live Search Results Dropdown */}
+        {/* Live Search Results Dropdown Overlay */}
         {showUserDropdown && searchVal.trim() && (
           <div style={{
             position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '8px',
-            background: 'var(--surface)', border: '1px solid var(--border)',
-            borderRadius: '12px', padding: '12px', boxShadow: 'var(--shadow)',
-            zIndex: 90, maxHeight: '320px', overflowY: 'auto'
+            background: 'var(--surface-elevated)', border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-lg)', padding: '12px', boxShadow: 'var(--shadow-hover)',
+            zIndex: 90, maxHeight: '340px', overflowY: 'auto'
           }}>
-            <h4 style={{ margin: '0 0 10px', fontSize: '12px', textTransform: 'uppercase', color: 'var(--primary)', letterSpacing: '0.05em' }}>
-              Creators Found ({matchedUsers.length})
-            </h4>
+            <div style={{
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              paddingBottom: '8px', marginBottom: '8px', borderBottom: '1px solid var(--border)'
+            }}>
+              <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--primary)', fontWeight: 800, letterSpacing: '0.05em' }}>
+                Creators ({matchedUsers.length})
+              </span>
+            </div>
 
             {matchedUsers.length > 0 ? (
-              matchedUsers.map(user => (
-                <UserCard key={user.uid} user={user} />
-              ))
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {matchedUsers.map(user => (
+                  <UserCard key={user.uid} user={user} />
+                ))}
+              </div>
             ) : (
-              <p style={{ margin: 0, fontSize: '13px', color: 'var(--muted)', textAlign: 'center', padding: '10px 0' }}>
+              <p style={{ margin: 0, fontSize: '0.86rem', color: 'var(--muted)', textAlign: 'center', padding: '14px 0' }}>
                 No creators match "{searchVal}"
               </p>
             )}
@@ -92,7 +120,8 @@ export default function Topbar({ title = "Home", subtitle = "Live social canvas"
         className="icon-button" 
         onClick={() => setIsDark(!isDark)} 
         type="button" 
-        title="Toggle theme"
+        title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+        aria-label="Toggle theme"
       >
         <i className={`fa-solid ${isDark ? 'fa-sun' : 'fa-moon'}`}></i>
       </button>
