@@ -119,6 +119,13 @@ export default function Chat() {
       : 'Creator';
   }
 
+  function getOtherParticipantAvatar(chat) {
+    if (!chat) return null;
+    return chat.participantAvatars
+      ? chat.participantAvatars.find((_, i) => chat.participants[i] !== currentUser.uid) || null
+      : null;
+  }
+
   const filteredUsers = allUsers.filter(u =>
     (u.name || '').toLowerCase().includes(userSearch.toLowerCase()) ||
     (u.handle || '').toLowerCase().includes(userSearch.toLowerCase())
@@ -158,7 +165,7 @@ export default function Chat() {
                   onClick={() => setActiveChat(chat)}
                   className={`chat-list-item ${activeChat?.id === chat.id ? 'active' : ''}`}
                 >
-                  <Avatar src={null} size="small" />
+                  <Avatar src={getOtherParticipantAvatar(chat)} size="small" />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <b style={{ fontSize: '0.9rem', color: 'var(--text)', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {getOtherParticipantName(chat)}
@@ -202,7 +209,7 @@ export default function Chat() {
                   padding: '12px 20px', borderBottom: '1px solid var(--border)',
                   display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--surface-soft)'
                 }}>
-                  <Avatar src={null} size="small" />
+                  <Avatar src={getOtherParticipantAvatar(activeChat)} size="small" />
                   <div>
                     <b style={{ fontSize: '0.94rem', color: 'var(--text)' }}>{getOtherParticipantName(activeChat)}</b>
                     <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--success)' }}>● Active Now</span>
