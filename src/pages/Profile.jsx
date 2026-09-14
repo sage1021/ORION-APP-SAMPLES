@@ -8,6 +8,7 @@ import PostCard from '../components/feed/PostCard';
 import Avatar from '../components/common/Avatar';
 import { PostSkeleton } from '../components/common/Skeleton';
 import ComposerModal from '../components/feed/ComposerModal';
+import EditProfileModal from '../components/profile/EditProfileModal';
 import MobileNav from '../components/layout/MobileNav';
 
 export default function Profile() {
@@ -16,6 +17,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('posts');
   const [composerOpen, setComposerOpen] = useState(false);
+  const [editProfileOpen, setEditProfileOpen] = useState(false);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -49,7 +51,22 @@ export default function Profile() {
 
         {/* Cinematic Profile Header */}
         <section className="profile-page-header" style={{ position: 'relative', overflow: 'hidden' }}>
-          <Avatar src={userProfile?.avatar} alt={userProfile?.name} size="large" />
+          <div style={{ position: 'relative' }}>
+            <Avatar src={userProfile?.avatar} alt={userProfile?.name} size="large" />
+            <button
+              onClick={() => setEditProfileOpen(true)}
+              style={{
+                position: 'absolute', bottom: '0', right: '0', width: '28px', height: '28px',
+                borderRadius: '50%', background: 'var(--primary)', color: '#ffffff',
+                border: '2px solid var(--surface)', cursor: 'pointer', display: 'grid',
+                placeItems: 'center', fontSize: '0.75rem', boxShadow: 'var(--shadow-sm)'
+              }}
+              title="Edit Profile"
+              aria-label="Edit Profile"
+            >
+              <i className="fa-solid fa-pencil"></i>
+            </button>
+          </div>
           
           <div>
             <h2>{userProfile?.name || 'Creator'}</h2>
@@ -74,6 +91,29 @@ export default function Profile() {
               <span>Following</span>
             </div>
           </div>
+
+          <button
+            onClick={() => setEditProfileOpen(true)}
+            type="button"
+            style={{
+              marginTop: '12px',
+              padding: '8px 22px',
+              borderRadius: 'var(--radius-full)',
+              border: '1px solid var(--border)',
+              background: 'var(--surface-soft)',
+              color: 'var(--text)',
+              fontSize: '0.86rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'all 0.18s var(--ease-spring)'
+            }}
+          >
+            <i className="fa-solid fa-pen-to-square"></i>
+            Edit Profile
+          </button>
         </section>
 
         {/* Profile Tabs */}
@@ -146,6 +186,7 @@ export default function Profile() {
         </section>
       </main>
 
+      <EditProfileModal isOpen={editProfileOpen} onClose={() => setEditProfileOpen(false)} />
       <ComposerModal isOpen={composerOpen} onClose={() => setComposerOpen(false)} />
       <MobileNav onOpenComposer={() => setComposerOpen(true)} />
     </div>
