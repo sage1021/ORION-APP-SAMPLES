@@ -137,6 +137,142 @@ body.splash-lock {
   overflow: hidden;
 }
 
+/* ==========================================================================
+   ORION CINEMATIC SPLASH SCREEN
+   ========================================================================== */
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #08090D;
+  background-image: 
+    radial-gradient(circle at 50% 40%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
+    radial-gradient(circle at 50% 60%, rgba(139, 92, 246, 0.10) 0%, transparent 50%),
+    linear-gradient(180deg, #08090D 0%, #0D0E15 100%);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s ease;
+  pointer-events: auto;
+}
+
+.splash-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+  animation: splashFadeIn 0.8s ease-out forwards;
+}
+
+.splash-logo-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+}
+
+.splash-logo-glow {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.35) 0%, transparent 70%);
+  filter: blur(12px);
+  animation: splashGlowPulse 2.4s ease-in-out infinite alternate;
+}
+
+.splash-content img,
+.splash-logo-img {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 24px rgba(99, 102, 241, 0.4));
+  animation: splashPulse 2s ease-in-out infinite alternate;
+  z-index: 2;
+}
+
+.splash-wordmark {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  background: linear-gradient(135deg, #FFFFFF 30%, #A5B4FC 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+}
+
+.splash-tagline {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  margin-top: -6px;
+}
+
+.loading-ring,
+.splash-spinner {
+  width: 32px;
+  height: 32px;
+  margin-top: 12px;
+  border: 2.5px solid rgba(255, 255, 255, 0.08);
+  border-top-color: var(--primary);
+  border-right-color: var(--secondary);
+  border-radius: 50%;
+  animation: spinRing 0.85s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
+}
+
+@keyframes splashFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes splashPulse {
+  0% {
+    transform: scale(0.96);
+    filter: drop-shadow(0 4px 16px rgba(99, 102, 241, 0.25));
+  }
+  100% {
+    transform: scale(1.04);
+    filter: drop-shadow(0 12px 28px rgba(99, 102, 241, 0.5));
+  }
+}
+
+@keyframes splashGlowPulse {
+  0% {
+    opacity: 0.4;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 0.9;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes spinRing {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 button, input, textarea, select {
   font: inherit;
 }

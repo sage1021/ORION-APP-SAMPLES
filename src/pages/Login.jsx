@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import SplashScreen from '../components/layout/SplashScreen';
 
 export default function Login() {
   const { login, signup, loginWithGoogle, currentUser } = useAuth();
@@ -14,10 +15,15 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
+  const [fadeSplash, setFadeSplash] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 1500);
-    return () => clearTimeout(timer);
+    const fadeTimer = setTimeout(() => setFadeSplash(true), 1000);
+    const removeTimer = setTimeout(() => setShowSplash(false), 1450);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(removeTimer);
+    };
   }, []);
 
   useEffect(() => {
@@ -76,18 +82,7 @@ export default function Login() {
   }
 
   if (showSplash) {
-    return (
-      <div id="splash-screen" style={{
-        position: 'fixed', inset: 0, zIndex: 9999,
-        background: 'linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center'
-      }}>
-        <div className="splash-content" style={{ textAlign: 'center' }}>
-          <img src="/media/MINI_LOGO no bg.png" alt="ORION" style={{ width: '80px', animation: 'splashPulse 1.8s ease-in-out infinite alternate' }} />
-          <div className="loading-ring"></div>
-        </div>
-      </div>
-    );
+    return <SplashScreen fadeOut={fadeSplash} />;
   }
 
   return (
