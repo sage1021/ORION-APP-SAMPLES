@@ -36,3 +36,28 @@ export function UserCardSkeleton() {
     </div>
   );
 }
+
+export function CommentSkeleton() {
+  return (
+    <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', padding: '8px 0' }}>
+      <div className="skeleton skeleton-avatar" style={{ width: '30px', height: '30px' }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '5px' }}>
+        <div className="skeleton" style={{ width: '30%', height: '12px' }}></div>
+        <div className="skeleton" style={{ width: '85%', height: '12px' }}></div>
+      </div>
+    </div>
+  );
+}
+
+export function ActivitySkeleton() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '14px 18px', borderBottom: '1px solid var(--border)' }}>
+      <div className="skeleton skeleton-avatar" style={{ width: '42px', height: '42px' }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+        <div className="skeleton" style={{ width: '55%', height: '14px' }}></div>
+        <div className="skeleton" style={{ width: '25%', height: '11px' }}></div>
+      </div>
+      <div className="skeleton" style={{ width: '42px', height: '42px', borderRadius: '8px' }}></div>
+    </div>
+  );
+}

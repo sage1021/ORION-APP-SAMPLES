@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { doc, updateDoc, increment, setDoc, deleteDoc } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { collection, query, orderBy, onSnapshot, addDoc, doc, updateDoc, increment, setDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../hooks/useAuth';
 import Avatar from '../common/Avatar';
+import { CommentSkeleton } from '../common/Skeleton';
 
 function timeAgo(timestamp) {
   if (!timestamp) return "Just now";
@@ -19,13 +20,21 @@ function formatCount(value) {
   return value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value;
 }
 
-export default function PostCard({ post, onOpenComments }) {
-  const { currentUser } = useAuth();
+export default function PostCard({ post }) {
+  const { currentUser, userProfile } = useAuth();
   const [liked, setLiked] = useState(post.isLikedByCurrentUser || false);
   const [likesCount, setLikesCount] = useState(post.likesCount || post.likes || 0);
+  const [commentsCount, setCommentsCount] = useState(post.commentsCount || 0);
   const [saved, setSaved] = useState(post.isSavedByCurrentUser || false);
   const [isLiking, setIsLiking] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  // Inline Comment Drawer State
+  const [showComments, setShowComments] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const [submittingComment, setSubmittingComment] = useState(false);
 
   // Optimistic Like Handler
   async function handleToggleLike() {
@@ -86,6 +95,58 @@ export default function PostCard({ post, onOpenComments }) {
     }
   }
 
+  // Load comments when drawer is opened
+  useEffect(() => {
+    if (!showComments) return;
+    setLoadingComments(true);
+
+    const q = query(
+      collection(db, 'posts', post.id, 'comments'),
+      orderBy('createdAt', 'asc')
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const msgs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setComments(msgs);
+      setLoadingComments(false);
+    }, (err) => {
+      console.log('Error loading comments:', err.message);
+      setLoadingComments(false);
+    });
+
+    return () => unsubscribe();
+  }, [showComments, post.id]);
+
+  // Submit comment handler
+  async function handleAddComment(e) {
+    e.preventDefault();
+    if (!commentText.trim() || !currentUser || submittingComment) return;
+
+    const textToSubmit = commentText.trim();
+    setCommentText('');
+    setSubmittingComment(true);
+    setCommentsCount(prev => prev + 1);
+
+    try {
+      const commentData = {
+        text: textToSubmit,
+        authorUid: currentUser.uid,
+        userName: userProfile?.name || 'Creator',
+        handle: userProfile?.handle || '@creator',
+        userAvatar: userProfile?.avatar || '/media/HIM.jpeg',
+        createdAt: serverTimestamp()
+      };
+
+      await addDoc(collection(db, 'posts', post.id, 'comments'), commentData);
+      await updateDoc(doc(db, 'posts', post.id), { commentsCount: increment(1) });
+    } catch (err) {
+      console.error('Failed to post comment:', err);
+      setCommentsCount(prev => Math.max(0, prev - 1));
+    } finally {
+      setSubmittingComment(false);
+    }
+  }
+
   return (
     <article className="post" id={`post-${post.id}`} data-post-id={post.id}>
       <header className="post-header">
@@ -142,12 +203,12 @@ export default function PostCard({ post, onOpenComments }) {
           
           <button 
             className="comment-button" 
-            onClick={() => onOpenComments && onOpenComments(post.id)} 
+            onClick={() => setShowComments(!showComments)} 
             type="button" 
-            title="Comment"
-            aria-label="Comment on post"
+            title={showComments ? "Hide comments" : "Show comments"}
+            aria-label="Toggle comments"
           >
-            <i className="fa-regular fa-comment"></i>
+            <i className={`${showComments ? "fa-solid" : "fa-regular"} fa-comment`}></i>
           </button>
 
           <button 
@@ -181,9 +242,9 @@ export default function PostCard({ post, onOpenComments }) {
           <span style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>•</span>
           <span 
             style={{ color: 'var(--muted)', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600 }}
-            onClick={() => onOpenComments && onOpenComments(post.id)}
+            onClick={() => setShowComments(!showComments)}
           >
-            {formatCount(post.commentsCount || 0)} {post.commentsCount === 1 ? 'comment' : 'comments'}
+            {formatCount(commentsCount)} {commentsCount === 1 ? 'comment' : 'comments'}
           </span>
         </div>
 
@@ -195,6 +256,91 @@ export default function PostCard({ post, onOpenComments }) {
           </div>
         )}
       </div>
+
+      {/* Inline Real-Time Comments Drawer */}
+      {showComments && (
+        <div style={{
+          borderTop: '1px solid var(--border)',
+          background: 'var(--surface-soft)',
+          padding: '14px 18px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '12px'
+        }}>
+          {loadingComments ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <CommentSkeleton />
+              <CommentSkeleton />
+            </div>
+          ) : comments.length > 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '260px', overflowY: 'auto' }}>
+              {comments.map(c => (
+                <div key={c.id} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                  <Avatar src={c.userAvatar} size="small" />
+                  <div style={{
+                    flex: 1,
+                    background: 'var(--surface)',
+                    padding: '8px 12px',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px solid var(--border)'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                      <b style={{ fontSize: '0.82rem', color: 'var(--text)' }}>{c.userName || 'Creator'}</b>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--muted)' }}>{timeAgo(c.createdAt)}</span>
+                    </div>
+                    <p style={{ margin: 0, fontSize: '0.86rem', lineHeight: 1.4, color: 'var(--text)' }}>
+                      {c.text}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p style={{ margin: '4px 0', fontSize: '0.82rem', color: 'var(--muted)', textAlign: 'center' }}>
+              No comments yet. Be the first to start the conversation!
+            </p>
+          )}
+
+          {/* Comment Form */}
+          {currentUser && (
+            <form onSubmit={handleAddComment} style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+              <input
+                type="text"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder="Write a comment..."
+                style={{
+                  flex: 1,
+                  padding: '8px 14px',
+                  borderRadius: 'var(--radius-full)',
+                  border: '1px solid var(--border)',
+                  background: 'var(--surface)',
+                  color: 'var(--text)',
+                  fontSize: '0.86rem',
+                  outline: 'none'
+                }}
+              />
+              <button
+                type="submit"
+                disabled={!commentText.trim() || submittingComment}
+                style={{
+                  padding: '6px 16px',
+                  borderRadius: 'var(--radius-full)',
+                  border: 'none',
+                  background: 'var(--primary)',
+                  color: '#ffffff',
+                  fontWeight: 700,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  opacity: (!commentText.trim() || submittingComment) ? 0.4 : 1
+                }}
+              >
+                Reply
+              </button>
+            </form>
+          )}
+        </div>
+      )}
     </article>
   );
 }

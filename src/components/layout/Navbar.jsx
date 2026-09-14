@@ -1,10 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function Navbar({ onOpenComposer }) {
-  const { logout } = useAuth();
+  const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+  const [unreadNotifs, setUnreadNotifs] = useState(0);
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const q = query(
+      collection(db, 'users', currentUser.uid, 'notifications'),
+      where('read', '==', false)
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setUnreadNotifs(snapshot.docs.length);
+    }, () => {});
+
+    return () => unsubscribe();
+  }, [currentUser]);
 
   async function handleLogout() {
     try {
@@ -35,8 +53,22 @@ export default function Navbar({ onOpenComposer }) {
           <i className="fa-regular fa-paper-plane"></i><span>Messages</span>
         </NavLink>
 
-        <NavLink to="/activity" className={({ isActive }) => isActive ? 'active' : ''} title="Activity">
-          <i className="fa-regular fa-heart"></i><span>Activity</span>
+        <NavLink to="/activity" className={({ isActive }) => isActive ? 'active' : ''} title="Activity" style={{ position: 'relative' }}>
+          <i className="fa-regular fa-heart"></i>
+          <span>Activity</span>
+          {unreadNotifs > 0 && (
+            <span style={{
+              position: 'absolute',
+              right: '12px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              background: 'var(--primary)',
+              boxShadow: '0 0 8px var(--primary)'
+            }}></span>
+          )}
         </NavLink>
 
         <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''} title="Dashboard">
@@ -48,7 +80,7 @@ export default function Navbar({ onOpenComposer }) {
         </NavLink>
       </nav>
 
-      <button className="primary-action" onClick={onOpenComposer} type="button">
+      <button className="primary-action" onClick={onOpenComposer} type="button" aria-label="Create new post">
         <i className="fa-regular fa-square-plus"></i>
         <span>Create</span>
       </button>
@@ -58,7 +90,8 @@ export default function Navbar({ onOpenComposer }) {
         onClick={handleLogout} 
         type="button" 
         title="Log out"
-        style={{ marginTop: 'auto', marginBottom: '15px' }}
+        style={{ marginTop: 'auto', marginBottom: '8px' }}
+        aria-label="Log out"
       >
         <i className="fa-solid fa-right-from-bracket"></i>
       </button>
